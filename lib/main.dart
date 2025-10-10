@@ -1,199 +1,250 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 
-void main() => runApp(CalculatorApp());
+void main() {
+  runApp(const TwoPlayerLudoApp());
+}
 
-class CalculatorApp extends StatelessWidget {
+class TwoPlayerLudoApp extends StatelessWidget {
+  const TwoPlayerLudoApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Calculator',
-      theme: ThemeData.dark(),
-      home: Calculator(),
+      title: 'Ludo Dice (2 Players)',
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(fontFamily: 'Roboto'),
+      home: const LudoTwoPlayerHome(),
     );
   }
 }
 
-class Calculator extends StatefulWidget {
-  @override
-  _CalculatorState createState() => _CalculatorState();
+class Player {
+  String name;
+  int score;
+  String avatar; // asset path
+
+  Player({
+    required this.name,
+    this.score = 0,
+    this.avatar = 'assets/avatars/default.png',
+  });
 }
 
-class _CalculatorState extends State<Calculator> {
-  String display = "0";
-  String currentInput = "";
-  double result = 0;
-  String lastOperation = "";
-  bool shouldResetDisplay = false;
+class LudoTwoPlayerHome extends StatefulWidget {
+  const LudoTwoPlayerHome({super.key});
 
-  void onButtonPressed(String buttonText) {
+  @override
+  State<LudoTwoPlayerHome> createState() => _LudoTwoPlayerHomeState();
+}
+
+class _LudoTwoPlayerHomeState extends State<LudoTwoPlayerHome> {
+  final List<Player> _players = [
+    Player(name: 'Player 1', avatar: 'assets/avatars/player1.png'),
+    Player(name: 'Player 2', avatar: 'assets/avatars/player2.png'),
+  ];
+
+  int _currentPlayerIndex = 0;
+  int _lastRoll = 1;
+  final Random _rng = Random();
+
+  void _rollDice() {
+    final roll = _rng.nextInt(6) + 1;
     setState(() {
-      if (buttonText == "CLEAR") {
-        display = "0";
-        currentInput = "";
-        result = 0;
-        lastOperation = "";
-        shouldResetDisplay = false;
-      }
-      else if (buttonText == "+" || buttonText == "-" ||
-          buttonText == "X" || buttonText == "/") {
-        if (currentInput.isNotEmpty) {
-          if (lastOperation.isEmpty) {
-            result = double.parse(currentInput);
-          } else {
-            calculateResult();
-          }
-          lastOperation = buttonText;
-          shouldResetDisplay = true;
-        }
-      }
-      else if (buttonText == "=") {
-        if (currentInput.isNotEmpty && lastOperation.isNotEmpty) {
-          calculateResult();
-          lastOperation = "";
-          shouldResetDisplay = true;
-        }
-      }
-      else if (buttonText == ".") {
-        if (shouldResetDisplay) {
-          currentInput = "0";
-          shouldResetDisplay = false;
-        }
-        if (!currentInput.contains(".")) {
-          currentInput = currentInput.isEmpty ? "0." : currentInput + ".";
-          display = currentInput;
-        }
-      }
-      else {
-        if (shouldResetDisplay) {
-          currentInput = "";
-          shouldResetDisplay = false;
-        }
-        currentInput = currentInput + buttonText;
-        display = currentInput;
-      }
+      _lastRoll = roll;
+      _players[_currentPlayerIndex].score += roll;
     });
   }
 
-  void calculateResult() {
-    double currentValue = double.parse(currentInput);
-
-    switch (lastOperation) {
-      case "+":
-        result += currentValue;
-        break;
-      case "-":
-        result -= currentValue;
-        break;
-      case "X":
-        result *= currentValue;
-        break;
-      case "/":
-        if (currentValue != 0) {
-          result /= currentValue;
-        } else {
-          display = "Error";
-          return;
-        }
-        break;
-    }
-
-    // Format the result
-    String formattedResult = result.toString();
-    if (formattedResult.endsWith(".0")) {
-      formattedResult = formattedResult.substring(0, formattedResult.length - 2);
-    }
-
-    display = formattedResult;
-    currentInput = formattedResult;
+  void _nextPlayer() {
+    setState(() {
+      _currentPlayerIndex = (_currentPlayerIndex + 1) % 2;
+    });
   }
 
-  Widget buildButton(String buttonText) {
-    return Expanded(
-      child: Padding(
-        padding: EdgeInsets.all(8.0),
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            padding: EdgeInsets.all(24.0),
-            backgroundColor: Colors.grey[850],
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.0),
-            ),
-          ),
-          child: Text(
-            buttonText,
-            style: TextStyle(
-              fontSize: 24.0,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
-          onPressed: () => onButtonPressed(buttonText),
-        ),
-      ),
+  void _resetGame() {
+    setState(() {
+      _lastRoll = 1;
+      _currentPlayerIndex = 0;
+      for (var p in _players) p.score = 0;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Game Reset!')),
     );
   }
+
+  Color _cardColor(int idx) =>
+      idx == 0 ? const Color(0xFFEF5350) : const Color(0xFF5C6BC0);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Flutter Calculator"),
-        backgroundColor: Colors.black,
+        title: const Text('🎲 Ludo Dice - 2 Players'),
+        actions: [
+          IconButton(
+            onPressed: () => showDialog(
+              context: context,
+              builder: (_) => AlertDialog(
+                title: const Text('Settings'),
+                content: const Text('Settings coming soon!'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('Close'),
+                  ),
+                ],
+              ),
+            ),
+            icon: const Icon(Icons.settings),
+          ),
+        ],
       ),
       body: Container(
-        color: Colors.black,
+        width: double.infinity,
+        padding: const EdgeInsets.all(16),
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFF8E2DE2), Color(0xFFFFA94D)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
         child: Column(
-          children: <Widget>[
-            Container(
-              alignment: Alignment.bottomRight,
-              padding: EdgeInsets.symmetric(
-                vertical: 24.0,
-                horizontal: 12.0,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(height: 10),
+            Text(
+              "It's ${_players[_currentPlayerIndex].name}'s Turn!",
+              style: const TextStyle(
+                fontSize: 22,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
               ),
-              child: Text(
-                display,
-                style: TextStyle(
-                  fontSize: 72.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+            ),
+            const SizedBox(height: 20),
+
+            // 🎲 Dice Image
+            Container(
+              height: 160,
+              width: 160,
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Center(
+                child: Image.asset(
+                  'assets/dice/dice$_lastRoll.png',
+                  width: 120,
+                  height: 120,
+                  fit: BoxFit.contain,
+                  errorBuilder: (_, __, ___) =>
+                  const Icon(Icons.casino, size: 80, color: Colors.white),
                 ),
               ),
             ),
-            Expanded(
-              child: Divider(color: Colors.white),
+            const SizedBox(height: 20),
+
+            // 🎯 Roll Button
+            ElevatedButton.icon(
+              onPressed: _rollDice,
+              icon: const Icon(Icons.casino_outlined),
+              label: const Text('Roll Dice'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.purple,
+                padding:
+                const EdgeInsets.symmetric(horizontal: 30, vertical: 14),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+              ),
             ),
-            Column(
+
+            const SizedBox(height: 30),
+
+            // 🧾 Scoreboard
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                children: [
+                  const Text(
+                    'Scoreboard',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  for (int i = 0; i < _players.length; i++)
+                    Container(
+                      margin: const EdgeInsets.symmetric(vertical: 6),
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: _cardColor(i),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            radius: 22,
+                            backgroundImage: AssetImage(_players[i].avatar),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              _players[i].name,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                          Text(
+                            _players[i].score.toString(),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+            ),
+
+            const Spacer(),
+
+            // 🔘 Floating Buttons Row
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Row(children: [
-                  buildButton("7"),
-                  buildButton("8"),
-                  buildButton("9"),
-                  buildButton("/"),
-                ]),
-                Row(children: [
-                  buildButton("4"),
-                  buildButton("5"),
-                  buildButton("6"),
-                  buildButton("X"),
-                ]),
-                Row(children: [
-                  buildButton("1"),
-                  buildButton("2"),
-                  buildButton("3"),
-                  buildButton("-"),
-                ]),
-                Row(children: [
-                  buildButton("0"),
-                  buildButton("."),
-                  buildButton("="),
-                  buildButton("+"),
-                ]),
-                Row(children: [
-                  buildButton("CLEAR"),
-                ]),
+                FloatingActionButton(
+                  heroTag: 'reset',
+                  onPressed: _resetGame,
+                  backgroundColor: Colors.white,
+                  foregroundColor: Colors.red,
+                  child: const Icon(Icons.refresh),
+                ),
+                FloatingActionButton(
+                  heroTag: 'next',
+                  onPressed: _nextPlayer,
+                  backgroundColor: Colors.white,
+                  foregroundColor: Colors.purple,
+                  child: const Icon(Icons.arrow_forward),
+                ),
               ],
             ),
+            const SizedBox(height: 20),
           ],
         ),
       ),
