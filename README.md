@@ -1,4 +1,4 @@
-# myludduapp
+# cgpa_clculator
 
 A new Flutter project.
 
