@@ -32,12 +32,6 @@ A Flutter-based task management application with offline capabilities, local not
 2. Start an Android Emulator from Android Studio
 3. Run `flutter run` in the project directory
 
-### iOS (macOS only)
-
-1. Connect an iOS device via USB, or
-2. Start an iOS Simulator from Xcode
-3. Run `flutter run` in the project directory
-
 ## Features Overview
 
 ### Task Management
@@ -101,10 +95,6 @@ lib/
 - Notification receivers for handling scheduled notifications
 - Proper manifest configuration for all required permissions
 
-### iOS
-- Notification permissions in Info.plist
-- AppDelegate configuration for notification handling
-- Proper permission descriptions for App Store compliance
 
 ## Contributing
 
@@ -114,6 +104,5 @@ lib/
 4. Push to the branch
 5. Create a pull request
 
-## License
+![WhatsApp Image 2025-11-19 at 13 25 26_a13d9454](https://github.com/user-attachments/assets/33ab8ab5-6c66-4197-a3ff-4bb78e06222e)
 
-This project is licensed under the MIT License.
