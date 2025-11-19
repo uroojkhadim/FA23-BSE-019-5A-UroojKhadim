@@ -104,5 +104,6 @@ lib/
 4. Push to the branch
 5. Create a pull request
 
-![WhatsApp Image 2025-11-19 at 13 25 26_a13d9454](https://github.com/user-attachments/assets/33ab8ab5-6c66-4197-a3ff-4bb78e06222e)
+
+
 
