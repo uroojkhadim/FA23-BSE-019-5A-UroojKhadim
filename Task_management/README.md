@@ -1,4 +1,20 @@
 # Task Management App
+vedio 
+<video controls src="WhatsApp Video 2025-11-19 at 13.39.15_ec803bad.mp4" title="Title"></video>
+
+screenshots
+![alt text](<WhatsApp Image 2025-11-19 at 13.25.27_c232aa17.jpg>)
+
+![alt text](<WhatsApp Image 2025-11-19 at 13.25.30_e5a14c64.jpg>)
+![alt text](<WhatsApp Image 2025-11-19 at 13.25.33_193368d6.jpg>)
+![alt text](<WhatsApp Image 2025-11-19 at 13.25.34_7449f20c.jpg>)
+
+![alt text](<WhatsApp Image 2025-11-19 at 13.25.34_7b5a7558.jpg>)
+![alt text](<WhatsApp Image 2025-11-19 at 13.25.37_b7479c3c.jpg>)
+![alt text](<WhatsApp Image 2025-11-19 at 13.25.38_cc1ea741.jpg>)
+![alt text](<WhatsApp Image 2025-11-19 at 13.25.37_37474a55.jpg>)
+![alt text](<WhatsApp Image 2025-11-19 at 13.25.38_49b1b409.jpg>)
+
 
 A Flutter-based task management application with offline capabilities, local notifications, task repetition, export functionality, and Google Drive backup/sync.
 
