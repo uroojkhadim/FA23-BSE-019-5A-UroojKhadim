@@ -1,5 +1,83 @@
 import 'package:flutter/material.dart';
 
+// Custom theme data class for the BMI calculator
+class BMICalculatorTheme {
+  static final ThemeData lightTheme = ThemeData(
+    primarySwatch: Colors.blue,
+    visualDensity: VisualDensity.adaptivePlatformDensity,
+    scaffoldBackgroundColor: const Color(0xFFF5F5F5),
+    appBarTheme: const AppBarTheme(
+      backgroundColor: Colors.blue,
+      foregroundColor: Colors.white,
+      elevation: 0,
+      titleTextStyle: TextStyle(
+        color: Colors.white,
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.blue,
+        foregroundColor: Colors.white,
+        padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+        textStyle: const TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: BorderSide.none,
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: BorderSide.none,
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: const BorderSide(color: Colors.blue),
+      ),
+      filled: true,
+      fillColor: Colors.white,
+      contentPadding: const EdgeInsets.all(16),
+      labelStyle: const TextStyle(
+        color: Colors.grey,
+        fontSize: 16,
+      ),
+    ),
+    textTheme: const TextTheme(
+      headlineMedium: TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        color: Colors.black87,
+      ),
+      bodyLarge: TextStyle(
+        fontSize: 16,
+        color: Colors.black54,
+      ),
+    ),
+  );
+
+  // Color scheme for BMI categories
+  static const Map<String, Color> bmiCategoryColors = {
+    'Underweight': Colors.blue,
+    'Normal weight': Colors.green,
+    'Overweight': Colors.orange,
+    'Obese': Colors.red,
+  };
+
+  // Get color for BMI category
+  static Color getBMIColor(String category) {
+    return bmiCategoryColors[category] ?? Colors.grey;
+  }
+}
+
 void main() {
   runApp(const BMICalculatorApp());
 }
@@ -11,10 +89,7 @@ class BMICalculatorApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'BMI Calculator',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
+      theme: BMICalculatorTheme.lightTheme,
       home: const BMICalculator(),
     );
   }
@@ -67,13 +142,13 @@ class _BMICalculatorState extends State<BMICalculator> {
 
   Color _getBMIColor(double bmi) {
     if (bmi < 18.5) {
-      return Colors.blue;
+      return BMICalculatorTheme.getBMIColor('Underweight');
     } else if (bmi >= 18.5 && bmi < 25) {
-      return Colors.green;
+      return BMICalculatorTheme.getBMIColor('Normal weight');
     } else if (bmi >= 25 && bmi < 30) {
-      return Colors.orange;
+      return BMICalculatorTheme.getBMIColor('Overweight');
     } else {
-      return Colors.red;
+      return BMICalculatorTheme.getBMIColor('Obese');
     }
   }
 
@@ -82,7 +157,6 @@ class _BMICalculatorState extends State<BMICalculator> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('BMI Calculator'),
-        backgroundColor: Theme.of(context).primaryColor,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -100,7 +174,6 @@ class _BMICalculatorState extends State<BMICalculator> {
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(
                 labelText: 'Height (cm)',
-                border: OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 20),
@@ -109,16 +182,11 @@ class _BMICalculatorState extends State<BMICalculator> {
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(
                 labelText: 'Weight (kg)',
-                border: OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 30),
             ElevatedButton(
               onPressed: _calculateBMI,
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                textStyle: const TextStyle(fontSize: 18),
-              ),
               child: const Text('Calculate BMI'),
             ),
             const SizedBox(height: 30),
@@ -128,6 +196,13 @@ class _BMICalculatorState extends State<BMICalculator> {
                 decoration: BoxDecoration(
                   color: _getBMIColor(_bmi),
                   borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 10,
+                      offset: const Offset(0, 5),
+                    ),
+                  ],
                 ),
                 child: Column(
                   children: [
