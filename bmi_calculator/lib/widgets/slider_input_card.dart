@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'repeat_container.dart';
 import 'icon_widgets.dart';
 import 'text_widgets.dart';
+import 'bmi_calculator_callbacks.dart';
 
 /// Slider Input Card Widget
 /// Displays input controls for height and weight using sliders and steppers
@@ -67,10 +68,19 @@ class _SliderInputCardState extends State<SliderInputCard> {
                   // Decrease weight button with gesture detector
                   GestureDetector(
                     onTap: () {
-                      // Use ternary operator to check weight limit
-                      widget.weightValue > 30 
-                        ? widget.onWeightChanged(widget.weightValue - 1)
-                        : null;
+                      // Create function object for weight change
+                      final weightChanger = BMICalculatorCallbacks.createWeightChanger(
+                        widget.weightValue,
+                        30,
+                        200,
+                        (newWeight) {
+                          // Change callback
+                          widget.onWeightChanged(newWeight);
+                        },
+                      );
+                      
+                      // Execute weight change with decrement
+                      weightChanger(widget.weightValue - 1);
                     },
                     child: const DecreaseIcon(),
                   ),
@@ -79,10 +89,19 @@ class _SliderInputCardState extends State<SliderInputCard> {
                   // Increase weight button with gesture detector
                   GestureDetector(
                     onTap: () {
-                      // Use ternary operator to check weight limit
-                      widget.weightValue < 200 
-                        ? widget.onWeightChanged(widget.weightValue + 1)
-                        : null;
+                      // Create function object for weight change
+                      final weightChanger = BMICalculatorCallbacks.createWeightChanger(
+                        widget.weightValue,
+                        30,
+                        200,
+                        (newWeight) {
+                          // Change callback
+                          widget.onWeightChanged(newWeight);
+                        },
+                      );
+                      
+                      // Execute weight change with increment
+                      weightChanger(widget.weightValue + 1);
                     },
                     child: const IncreaseIcon(),
                   ),

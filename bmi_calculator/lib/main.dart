@@ -9,6 +9,7 @@ import 'widgets/bmi_calculator_utils.dart';
 import 'widgets/text_widgets.dart';
 import 'widgets/input_method.dart';
 import 'widgets/bmi_category.dart';
+import 'widgets/bmi_calculator_callbacks.dart';
 
 // =============================================================================
 // MAIN APPLICATION
@@ -64,34 +65,59 @@ class _BMICalculatorState extends State<BMICalculator> {
   double _bmi = 0.0;
   BMICategory _bmiCategory = BMICategory.normal;
 
-  /// Calculate BMI based on input values
+  /// Calculate BMI based on input values using function objects
   void _calculateBMI() {
-    double heightInMeters;
-    double weight;
-
-    // Use different input methods based on toggle state
-    heightInMeters = _inputMethod == InputMethod.slider 
-        ? _heightSliderValue / 100 // Convert cm to meters
-        : double.parse(_heightController.text.isEmpty ? '0' : _heightController.text) / 100;
-        
-    weight = _inputMethod == InputMethod.slider 
-        ? _weightStepperValue.toDouble()
-        : double.parse(_weightController.text.isEmpty ? '0' : _weightController.text);
-
-    // Validate input
-    if ((_inputMethod == InputMethod.text) && 
-        (_heightController.text.isEmpty || _weightController.text.isEmpty)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter both height and weight')),
+    // Create function object for BMI calculation
+    final bmiCalculator = BMICalculatorCallbacks.createBMICalculator(
+      _inputMethod == InputMethod.slider ? _heightSliderValue : 
+          (_heightController.text.isEmpty ? 0 : double.parse(_heightController.text)),
+      _inputMethod == InputMethod.slider ? _weightStepperValue.toDouble() : 
+          (_weightController.text.isEmpty ? 0 : double.parse(_weightController.text)),
+      (bmi, category) {
+        // Success callback
+        setState(() {
+          _bmi = bmi;
+          _bmiCategory = category;
+        });
+      },
+      (errorMessage) {
+        // Error callback using message shower function object
+        final messageShower = BMICalculatorCallbacks.createMessageShower(
+          context,
+          errorMessage,
+          Colors.red,
+        );
+        messageShower();
+      },
+    );
+    
+    // Validate input before calculation
+    if (_inputMethod == InputMethod.text) {
+      final inputValidator = BMICalculatorCallbacks.createInputValidator(
+        _heightController.text,
+        _weightController.text,
+        (isValid, message) {
+          if (isValid) {
+            // Valid input - proceed with calculation
+            bmiCalculator();
+          } else {
+            // Invalid input - show error using message shower function object
+            final messageShower = BMICalculatorCallbacks.createMessageShower(
+              context,
+              message,
+              Colors.red,
+            );
+            messageShower();
+          }
+        },
       );
-      return;
+      
+      // Execute validation
+      inputValidator();
+    } else {
+      // For slider input, directly calculate BMI
+      bmiCalculator();
     }
-
-    // Update state with calculated BMI
-    setState(() {
-      _bmi = BMICalculatorUtils.calculateBMI(heightInMeters, weight); // BMI formula
-      _bmiCategory = BMICalculatorUtils.getBMICategory(_bmi); // Determine category
-    });
   }
 
   /// Get color associated with BMI category
@@ -99,11 +125,50 @@ class _BMICalculatorState extends State<BMICalculator> {
     return BMICalculatorUtils.getBMIColor(category);
   }
 
-  /// Toggle between text input and slider input methods
+  /// Toggle between text input and slider input methods using function objects
   void _toggleInputMethod() {
-    setState(() {
-      _inputMethod = _inputMethod.toggle; // Toggle input method using enum
-    });
+    // Create function object for toggling input method
+    final toggleFunction = BMICalculatorCallbacks.createInputMethodToggle(
+      () {
+        // Toggle callback
+        setState(() {
+          _inputMethod = _inputMethod.toggle;
+        });
+      },
+    );
+    
+    // Execute toggle
+    toggleFunction();
+  }
+
+  /// Reset all values using function objects
+  void _resetValues() {
+    // Create function object for resetting values
+    final resetFunction = BMICalculatorCallbacks.createResetFunction(
+      () {
+        // Reset callback
+        setState(() {
+          _heightController.clear();
+          _weightController.clear();
+          _heightSliderValue = 170.0;
+          _weightStepperValue = 70;
+          _bmi = 0.0;
+          _bmiCategory = BMICategory.normal;
+        });
+      },
+      (message) {
+        // Message callback using message shower function object
+        final messageShower = BMICalculatorCallbacks.createMessageShower(
+          context,
+          message,
+          Colors.green,
+        );
+        messageShower();
+      },
+    );
+    
+    // Execute reset
+    resetFunction();
   }
 
   @override
@@ -113,6 +178,11 @@ class _BMICalculatorState extends State<BMICalculator> {
       appBar: AppBar(
         title: const Text('BMI Calculator'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: _resetValues,
+            tooltip: 'Reset Values',
+          ),
           InputMethodToggle(
             useSliders: _inputMethod == InputMethod.slider,
             onToggle: _toggleInputMethod,
@@ -134,26 +204,52 @@ class _BMICalculatorState extends State<BMICalculator> {
               const AppDescriptionText(),
               const SizedBox(height: 30),
               
-              // Input cards based on selected method
-              _inputMethod == InputMethod.text
-                ? TextInputCard(
-                    heightController: _heightController,
-                    weightController: _weightController,
-                  )
-                : SliderInputCard(
-                    heightValue: _heightSliderValue,
-                    weightValue: _weightStepperValue,
-                    onHeightChanged: (value) {
-                      setState(() {
-                        _heightSliderValue = value;
-                      });
-                    },
-                    onWeightChanged: (value) {
-                      setState(() {
-                        _weightStepperValue = value.toInt();
-                      });
-                    },
-                  ),
+              // Input cards based on selected method using conditional renderer
+              BMICalculatorCallbacks.createConditionalRenderer(
+                _inputMethod == InputMethod.text,
+                TextInputCard(
+                  heightController: _heightController,
+                  weightController: _weightController,
+                ),
+                SliderInputCard(
+                  heightValue: _heightSliderValue,
+                  weightValue: _weightStepperValue,
+                  onHeightChanged: (value) {
+                    // Create function object for height change
+                    final heightChanger = BMICalculatorCallbacks.createHeightChanger(
+                      _heightSliderValue,
+                      100.0,
+                      250.0,
+                      (newHeight) {
+                        // Change callback
+                        setState(() {
+                          _heightSliderValue = newHeight;
+                        });
+                      },
+                    );
+                    
+                    // Execute height change
+                    heightChanger(value);
+                  },
+                  onWeightChanged: (value) {
+                    // Create function object for weight change
+                    final weightChanger = BMICalculatorCallbacks.createWeightChanger(
+                      _weightStepperValue,
+                      30,
+                      200,
+                      (newWeight) {
+                        // Change callback
+                        setState(() {
+                          _weightStepperValue = newWeight;
+                        });
+                      },
+                    );
+                    
+                    // Execute weight change
+                    weightChanger(value);
+                  },
+                ),
+              )(),
               
               const SizedBox(height: 30),
               
@@ -170,14 +266,16 @@ class _BMICalculatorState extends State<BMICalculator> {
               
               const SizedBox(height: 30),
               
-              // Display BMI result if calculated
-              _bmi > 0
-                ? BMIResultCard(
-                    bmi: _bmi,
-                    category: _bmiCategory,
-                    color: _getBMIColor(_bmiCategory),
-                  )
-                : const SizedBox.shrink(),
+              // Display BMI result if calculated using conditional renderer
+              BMICalculatorCallbacks.createConditionalRenderer(
+                _bmi > 0,
+                BMIResultCard(
+                  bmi: _bmi,
+                  category: _bmiCategory,
+                  color: _getBMIColor(_bmiCategory),
+                ),
+                const SizedBox.shrink(),
+              )(),
             ],
           ),
         ),
