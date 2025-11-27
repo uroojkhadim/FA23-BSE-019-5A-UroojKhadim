@@ -12,6 +12,7 @@ import 'widgets/bmi_category.dart';
 import 'widgets/bmi_calculator_callbacks.dart';
 import 'widgets/constants/spacing_constants.dart';
 import 'widgets/custom_fab.dart';
+import 'widgets/bmi_info_screen.dart';
 
 // =============================================================================
 // MAIN APPLICATION
@@ -34,6 +35,9 @@ class BMICalculatorApp extends StatelessWidget {
       title: 'BMI Calculator',
       theme: BMICalculatorTheme.lightTheme,
       home: const BMICalculatorScreen(),
+      routes: {
+        '/bmi-info': (context) => const BMIInfoScreen(),
+      },
     );
   }
 }
@@ -241,6 +245,18 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                   category: _category,
                   color: _getColorForCategory(_category),
                 ),
+              
+              const SizedBox(height: SpacingConstants.extraLarge),
+              
+              // Button to navigate to BMI information screen
+              Center(
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/bmi-info');
+                  },
+                  child: const Text('Learn more about BMI'),
+                ),
+              ),
               
               const SizedBox(height: SpacingConstants.extraLarge),
             ],
