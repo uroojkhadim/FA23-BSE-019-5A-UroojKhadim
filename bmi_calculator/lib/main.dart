@@ -205,6 +205,10 @@ class _BMICalculatorState extends State<BMICalculator> {
               const AppDescriptionText(),
               const SizedBox(height: SpacingConstants.huge),
               
+              // Section header for input
+              const SectionHeaderText(text: 'Enter Your Details'),
+              const SizedBox(height: SpacingConstants.large),
+              
               // Input cards based on selected method using conditional renderer
               BMICalculatorCallbacks.createConditionalRenderer(
                 _inputMethod == InputMethod.text,
@@ -270,10 +274,16 @@ class _BMICalculatorState extends State<BMICalculator> {
               // Display BMI result if calculated using conditional renderer
               BMICalculatorCallbacks.createConditionalRenderer(
                 _bmi > 0,
-                BMIResultCard(
-                  bmi: _bmi,
-                  category: _bmiCategory,
-                  color: _getBMIColor(_bmiCategory),
+                Column(
+                  children: [
+                    const SectionHeaderText(text: 'Your Results'),
+                    const SizedBox(height: SpacingConstants.large),
+                    BMIResultCard(
+                      bmi: _bmi,
+                      category: _bmiCategory,
+                      color: _getBMIColor(_bmiCategory),
+                    ),
+                  ],
                 ),
                 const SizedBox.shrink(),
               )(),

@@ -134,3 +134,206 @@ class BMIValueText extends StatelessWidget {
     );
   }
 }
+
+/// New text widgets for enhanced BMI calculator
+
+/// Input label text widget
+class InputLabelText extends StatelessWidget {
+  final String text;
+
+  const InputLabelText({Key? key, required this.text}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: TextStyleConstants.inputLabel,
+    );
+  }
+}
+
+/// Button text widget
+class ButtonText extends StatelessWidget {
+  final String text;
+
+  const ButtonText({Key? key, required this.text}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: TextStyleConstants.buttonText,
+    );
+  }
+}
+
+/// Error message text widget
+class ErrorMessageText extends StatelessWidget {
+  final String text;
+
+  const ErrorMessageText({Key? key, required this.text}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: const TextStyle(
+        color: Colors.red,
+        fontSize: 14,
+        fontWeight: FontWeight.w500,
+      ),
+    );
+  }
+}
+
+/// Success message text widget
+class SuccessMessageText extends StatelessWidget {
+  final String text;
+
+  const SuccessMessageText({Key? key, required this.text}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: const TextStyle(
+        color: Colors.green,
+        fontSize: 14,
+        fontWeight: FontWeight.w500,
+      ),
+    );
+  }
+}
+
+/// Information text widget
+class InfoText extends StatelessWidget {
+  final String text;
+
+  const InfoText({Key? key, required this.text}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: const TextStyle(
+        color: Colors.blue,
+        fontSize: 14,
+        fontWeight: FontWeight.w500,
+      ),
+    );
+  }
+}
+
+/// Warning text widget
+class WarningText extends StatelessWidget {
+  final String text;
+
+  const WarningText({Key? key, required this.text}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: const TextStyle(
+        color: Colors.orange,
+        fontSize: 14,
+        fontWeight: FontWeight.w500,
+      ),
+    );
+  }
+}
+
+/// Large value display text widget
+class LargeValueText extends StatelessWidget {
+  final String label;
+  final String value;
+  final String unit;
+
+  const LargeValueText({
+    Key? key,
+    required this.label,
+    required this.value,
+    required this.unit,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.black87,
+          ),
+        ),
+        const SizedBox(height: SpacingConstants.small),
+        Text(
+          '$value $unit',
+          style: const TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Colors.black87,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Section header text widget
+class SectionHeaderText extends StatelessWidget {
+  final String text;
+
+  const SectionHeaderText({Key? key, required this.text}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: const TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+        color: Colors.black87,
+      ),
+    );
+  }
+}
+
+/// Subsection header text widget
+class SubSectionHeaderText extends StatelessWidget {
+  final String text;
+
+  const SubSectionHeaderText({Key? key, required this.text}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: const TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.w600,
+        color: Colors.black54,
+      ),
+    );
+  }
+}
+
+/// Caption text widget
+class CaptionText extends StatelessWidget {
+  final String text;
+
+  const CaptionText({Key? key, required this.text}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: const TextStyle(
+        fontSize: 12,
+        color: Colors.grey,
+      ),
+    );
+  }
+}

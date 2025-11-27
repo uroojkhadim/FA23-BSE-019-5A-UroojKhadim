@@ -7,6 +7,7 @@ import 'bmi_category.dart';
 import 'constants/container_constants.dart';
 import 'constants/color_constants.dart';
 import 'constants/spacing_constants.dart';
+import 'bmi_range_text.dart';
 
 /// BMI Result Card Widget
 /// Displays the calculated BMI result with category and visualization
@@ -45,6 +46,9 @@ class BMIResultCard extends StatelessWidget {
           // BMI category display
           CategoryLabelText(category: category.displayName),
           const SizedBox(height: SpacingConstants.large),
+          // Additional information
+          const InfoText(text: 'This is your Body Mass Index result'),
+          const SizedBox(height: SpacingConstants.medium),
           // Visual BMI scale representation
           Container(
             height: ContainerConstants.bmiScaleHeight,
@@ -109,8 +113,44 @@ class BMIResultCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: SpacingConstants.large),
+          // BMI ranges information
+          const SubSectionHeaderText(text: 'BMI Categories:'),
+          const SizedBox(height: SpacingConstants.medium),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: const [
+              BMIRangeText(
+                label: 'Underweight',
+                minValue: 0.0,
+                maxValue: 18.4,
+                color: ColorConstants.underweightColor,
+              ),
+              BMIRangeText(
+                label: 'Normal',
+                minValue: 18.5,
+                maxValue: 24.9,
+                color: ColorConstants.normalWeightColor,
+              ),
+              BMIRangeText(
+                label: 'Overweight',
+                minValue: 25.0,
+                maxValue: 29.9,
+                color: ColorConstants.overweightColor,
+              ),
+              BMIRangeText(
+                label: 'Obese',
+                minValue: 30.0,
+                maxValue: 100.0,
+                color: ColorConstants.obeseColor,
+              ),
+            ],
+          ),
+          const SizedBox(height: SpacingConstants.large),
           // Description based on BMI category
           CategoryDescriptionText(description: category.description),
+          const SizedBox(height: SpacingConstants.medium),
+          // Additional guidance
+          const CaptionText(text: 'Consult a healthcare provider for personalized advice'),
         ],
       ),
     );

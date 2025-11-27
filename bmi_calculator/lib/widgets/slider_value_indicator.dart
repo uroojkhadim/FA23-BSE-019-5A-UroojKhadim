@@ -1,6 +1,7 @@
 // Import the Flutter material design library
 import 'package:flutter/material.dart';
 import 'constants/color_constants.dart';
+import 'text_widgets.dart';
 
 /// Slider Value Indicator Widget
 /// Displays the current value of a slider with enhanced styling
@@ -27,27 +28,17 @@ class SliderValueIndicator extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: ColorConstants.darkText,
-          ),
-        ),
+        SubSectionHeaderText(text: label),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
           decoration: BoxDecoration(
             color: Colors.green[100],
             borderRadius: BorderRadius.circular(20),
           ),
-          child: Text(
-            '$value $unit',
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: ColorConstants.darkText,
-            ),
+          child: LargeValueText(
+            label: '',
+            value: value,
+            unit: unit,
           ),
         ),
       ],
