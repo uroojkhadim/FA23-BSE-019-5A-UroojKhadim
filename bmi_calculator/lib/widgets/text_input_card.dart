@@ -13,12 +13,16 @@ class TextInputCard extends StatelessWidget {
   
   /// Controller for the weight text field
   final TextEditingController weightController;
+  
+  /// Flag indicating if metric units are used
+  final bool isMetric;
 
   /// Constructor for TextInputCard
   const TextInputCard({
     Key? key,
     required this.heightController,
     required this.weightController,
+    this.isMetric = true,
   }) : super(key: key);
 
   @override
@@ -30,9 +34,9 @@ class TextInputCard extends StatelessWidget {
           TextField(
             controller: heightController,
             keyboardType: TextInputType.number, // Only accept numbers
-            decoration: const InputDecoration(
-              labelText: 'Height (cm)',
-              prefixIcon: HeightIcon(), // Custom height icon
+            decoration: InputDecoration(
+              labelText: 'Height (${isMetric ? 'cm' : 'ft'})',
+              prefixIcon: const HeightIcon(), // Custom height icon
             ),
             // Add function object for validation on change
             onChanged: (value) {
@@ -44,9 +48,9 @@ class TextInputCard extends StatelessWidget {
           TextField(
             controller: weightController,
             keyboardType: TextInputType.number, // Only accept numbers
-            decoration: const InputDecoration(
-              labelText: 'Weight (kg)',
-              prefixIcon: WeightIcon(), // Custom weight icon
+            decoration: InputDecoration(
+              labelText: 'Weight (${isMetric ? 'kg' : 'lbs'})',
+              prefixIcon: const WeightIcon(), // Custom weight icon
             ),
             // Add function object for validation on change
             onChanged: (value) {

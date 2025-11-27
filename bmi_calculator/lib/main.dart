@@ -14,6 +14,8 @@ import 'widgets/constants/spacing_constants.dart';
 import 'widgets/custom_fab.dart';
 import 'widgets/bmi_info_screen.dart';
 import 'widgets/bmi_history_screen.dart';
+import 'widgets/splash_screen.dart';
+import 'widgets/settings_screen.dart';
 
 // =============================================================================
 // MAIN APPLICATION
@@ -26,16 +28,31 @@ void main() {
 
 /// Main application widget
 /// This is the root widget of the BMI calculator app
-class BMICalculatorApp extends StatelessWidget {
+class BMICalculatorApp extends StatefulWidget {
   /// Constructor with key parameter
   const BMICalculatorApp({Key? key}) : super(key: key);
+
+  @override
+  State<BMICalculatorApp> createState() => _BMICalculatorAppState();
+}
+
+class _BMICalculatorAppState extends State<BMICalculatorApp> {
+  bool _isInitialized = false;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'BMI Calculator',
       theme: BMICalculatorTheme.lightTheme,
-      home: const BMICalculatorScreen(),
+      home: _isInitialized 
+          ? const BMICalculatorScreen()
+          : SplashScreen(
+              onInitializationComplete: () {
+                setState(() {
+                  _isInitialized = true;
+                });
+              },
+            ),
       routes: {
         '/bmi-info': (context) => const BMIInfoScreen(),
       },
@@ -75,6 +92,12 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
   
   // BMI history
   final List<BMIHistoryItem> _bmiHistory = [];
+  
+  // Unit system (metric or imperial)
+  bool _isMetric = true;
+  
+  // Settings
+  String _unitSystem = 'metric';
 
   /// Calculates BMI and updates the result
   void _calculateBMI() {
@@ -84,17 +107,21 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
     final double weight = _inputMethod == InputMethod.slider ? _weight : 
         (_weightController.text.isEmpty ? 0 : double.parse(_weightController.text));
         
+    // Convert to metric if needed
+    final double metricHeight = _isMetric ? height : _convertFeetToCm(height);
+    final double metricWeight = _isMetric ? weight : _convertLbsToKg(weight);
+        
     // Create function object for BMI calculation
     final bmiCalculator = BMICalculatorCallbacks.createBMICalculator(
-      height,
-      weight,
+      metricHeight,
+      metricWeight,
       (bmi, category) {
         // Success callback
         setState(() {
           _bmi = bmi;
           _category = category;
           
-          // Add to history
+          // Add to history (store in the unit system the user entered)
           _bmiHistory.add(
             BMIHistoryItem(
               date: DateTime.now(),
@@ -144,6 +171,26 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
       // For slider input, directly calculate BMI
       bmiCalculator();
     }
+  }
+
+  /// Converts feet to centimeters
+  double _convertFeetToCm(double feet) {
+    // Assuming input is in feet.inches format (e.g., 5.8 for 5 feet 8 inches)
+    final parts = feet.toString().split('.');
+    if (parts.length == 1) {
+      // Whole feet only
+      return feet * 30.48;
+    } else {
+      // Feet and inches
+      final feetPart = double.parse(parts[0]);
+      final inchesPart = double.parse(parts[1]);
+      return (feetPart * 12 + inchesPart) * 2.54;
+    }
+  }
+
+  /// Converts pounds to kilograms
+  double _convertLbsToKg(double pounds) {
+    return pounds * 0.453592;
   }
 
   /// Get color associated with BMI category
@@ -218,6 +265,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                 TextInputCard(
                   heightController: _heightController,
                   weightController: _weightController,
+                  isMetric: _isMetric,
                 )
               else
                 SliderInputCard(
@@ -233,6 +281,7 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                       _weight = value.toDouble();
                     });
                   },
+                  isMetric: _isMetric,
                 ),
               const SizedBox(height: SpacingConstants.extraLarge),
               
@@ -291,6 +340,23 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                     );
                   },
                   child: const Text('View BMI History'),
+                ),
+              ),
+              
+              const SizedBox(height: SpacingConstants.small),
+              
+              // Button to navigate to settings screen
+              Center(
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SettingsScreen(),
+                      ),
+                    );
+                  },
+                  child: const Text('Settings'),
                 ),
               ),
               

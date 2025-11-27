@@ -23,6 +23,9 @@ class SliderInputCard extends StatefulWidget {
   
   /// Callback function when weight stepper value changes
   final Function(int) onWeightChanged;
+  
+  /// Flag indicating if metric units are used
+  final bool isMetric;
 
   /// Constructor for SliderInputCard
   const SliderInputCard({
@@ -31,6 +34,7 @@ class SliderInputCard extends StatefulWidget {
     required this.weightValue,
     required this.onHeightChanged,
     required this.onWeightChanged,
+    this.isMetric = true,
   }) : super(key: key);
 
   @override
@@ -38,7 +42,6 @@ class SliderInputCard extends StatefulWidget {
 }
 
 class _SliderInputCardState extends State<SliderInputCard> {
-  // Local variables to track slider values
   late double _currentHeight;
   late int _currentWeight;
 
@@ -52,12 +55,15 @@ class _SliderInputCardState extends State<SliderInputCard> {
   @override
   void didUpdateWidget(covariant SliderInputCard oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // Update local values when widget is updated
     if (oldWidget.heightValue != widget.heightValue) {
-      _currentHeight = widget.heightValue;
+      setState(() {
+        _currentHeight = widget.heightValue;
+      });
     }
     if (oldWidget.weightValue != widget.weightValue) {
-      _currentWeight = widget.weightValue;
+      setState(() {
+        _currentWeight = widget.weightValue;
+      });
     }
   }
 
@@ -65,79 +71,55 @@ class _SliderInputCardState extends State<SliderInputCard> {
   Widget build(BuildContext context) {
     return RepeatContainer(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Display current height value with enhanced styling
+          // Height slider with value indicator
           SliderValueIndicator(
-            label: 'Height:',
-            value: _currentHeight.round().toString(),
-            unit: 'cm',
+            label: 'Height',
+            value: _currentHeight.toStringAsFixed(1),
+            unit: widget.isMetric ? 'cm' : 'ft',
           ),
-          // Enhanced height slider control using custom slider
+          const SizedBox(height: SpacingConstants.small),
           CustomSlider(
             value: _currentHeight,
-            min: 100, // Minimum height (100 cm)
-            max: 250, // Maximum height (250 cm)
-            divisions: 150, // Number of discrete steps
-            label: '${_currentHeight.round()} cm', // Display value when sliding
-            onChanged: (double value) {
+            min: widget.isMetric ? 100.0 : 3.0,
+            max: widget.isMetric ? 250.0 : 8.0,
+            divisions: widget.isMetric ? 150 : 60,
+            label: _currentHeight.toStringAsFixed(1),
+            onChanged: (value) {
               setState(() {
                 _currentHeight = value;
               });
-              // Call the callback to update the parent widget
               widget.onHeightChanged(value);
             },
           ),
-          const SizedBox(height: SpacingConstants.extraLarge), // Spacing
+          const SizedBox(height: SpacingConstants.extraLarge),
           
-          // Weight section with enhanced controls
+          // Weight stepper with value indicator
           SliderValueIndicator(
-            label: 'Weight:',
+            label: 'Weight',
             value: _currentWeight.toString(),
-            unit: 'kg',
+            unit: widget.isMetric ? 'kg' : 'lbs',
           ),
-          const SizedBox(height: SpacingConstants.medium),
-          
-          // Enhanced weight stepper controls using custom stepper
+          const SizedBox(height: SpacingConstants.small),
           CustomStepper(
             value: _currentWeight,
-            minValue: 30,
-            maxValue: 200,
+            minValue: widget.isMetric ? 20 : 44,
+            maxValue: widget.isMetric ? 200 : 440,
             onDecrement: () {
-              // Create function object for weight change
-              final weightChanger = BMICalculatorCallbacks.createWeightChanger(
-                _currentWeight,
-                30,
-                200,
-                (newWeight) {
-                  // Change callback
-                  setState(() {
-                    _currentWeight = newWeight;
-                  });
-                  widget.onWeightChanged(newWeight);
-                },
-              );
-              
-              // Execute weight change with decrement
-              weightChanger(_currentWeight - 1);
+              if (_currentWeight > (widget.isMetric ? 20 : 44)) {
+                setState(() {
+                  _currentWeight--;
+                });
+                widget.onWeightChanged(_currentWeight);
+              }
             },
             onIncrement: () {
-              // Create function object for weight change
-              final weightChanger = BMICalculatorCallbacks.createWeightChanger(
-                _currentWeight,
-                30,
-                200,
-                (newWeight) {
-                  // Change callback
-                  setState(() {
-                    _currentWeight = newWeight;
-                  });
-                  widget.onWeightChanged(newWeight);
-                },
-              );
-              
-              // Execute weight change with increment
-              weightChanger(_currentWeight + 1);
+              if (_currentWeight < (widget.isMetric ? 200 : 440)) {
+                setState(() {
+                  _currentWeight++;
+                });
+                widget.onWeightChanged(_currentWeight);
+              }
             },
           ),
         ],
