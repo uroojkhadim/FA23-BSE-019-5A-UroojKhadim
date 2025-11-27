@@ -79,12 +79,342 @@ class BMICalculatorTheme {
   }
 }
 
+// RepeatContainer class for consistent styled containers
+class RepeatContainer extends StatelessWidget {
+  final Widget child;
+  final Color? color;
+  final EdgeInsetsGeometry? margin;
+  final EdgeInsetsGeometry padding;
+  final BorderRadiusGeometry borderRadius;
+  final List<BoxShadow>? boxShadow;
+
+  const RepeatContainer({
+    Key? key,
+    required this.child,
+    this.color,
+    this.margin,
+    this.padding = const EdgeInsets.all(20),
+    this.borderRadius = const BorderRadius.all(Radius.circular(15)),
+    this.boxShadow,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: margin,
+      padding: padding,
+      decoration: BoxDecoration(
+        color: color ?? Colors.white,
+        borderRadius: borderRadius,
+        boxShadow: boxShadow ?? [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            spreadRadius: 2,
+            blurRadius: 5,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: child,
+    );
+  }
+}
+
+// Input Method Toggle Widget
+class InputMethodToggle extends StatelessWidget {
+  final bool useSliders;
+  final VoidCallback onToggle;
+
+  const InputMethodToggle({
+    Key? key,
+    required this.useSliders,
+    required this.onToggle,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: Icon(useSliders ? Icons.text_fields : Icons.slideshow),
+      onPressed: onToggle,
+      tooltip: useSliders ? 'Switch to Text Fields' : 'Switch to Sliders',
+    );
+  }
+}
+
+// Text Input Card Widget
+class TextInputCard extends StatelessWidget {
+  final TextEditingController heightController;
+  final TextEditingController weightController;
+
+  const TextInputCard({
+    Key? key,
+    required this.heightController,
+    required this.weightController,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return RepeatContainer(
+      child: Column(
+        children: [
+          TextField(
+            controller: heightController,
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(
+              labelText: 'Height (cm)',
+              prefixIcon: Icon(Icons.height),
+            ),
+          ),
+          const SizedBox(height: 20),
+          TextField(
+            controller: weightController,
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(
+              labelText: 'Weight (kg)',
+              prefixIcon: Icon(Icons.monitor_weight),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// Slider Input Card Widget
+class SliderInputCard extends StatefulWidget {
+  final double heightValue;
+  final int weightValue;
+  final Function(double) onHeightChanged;
+  final Function(int) onWeightChanged;
+
+  const SliderInputCard({
+    Key? key,
+    required this.heightValue,
+    required this.weightValue,
+    required this.onHeightChanged,
+    required this.onWeightChanged,
+  }) : super(key: key);
+
+  @override
+  State<SliderInputCard> createState() => _SliderInputCardState();
+}
+
+class _SliderInputCardState extends State<SliderInputCard> {
+  @override
+  Widget build(BuildContext context) {
+    return RepeatContainer(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Height: ${widget.heightValue.round()} cm',
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Slider(
+            value: widget.heightValue,
+            min: 100,
+            max: 250,
+            divisions: 150,
+            label: widget.heightValue.round().toString(),
+            onChanged: widget.onHeightChanged,
+          ),
+          const SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Weight: ',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.remove_circle),
+                    onPressed: () {
+                      if (widget.weightValue > 30) {
+                        widget.onWeightChanged(widget.weightValue - 1);
+                      }
+                    },
+                  ),
+                  Text(
+                    '${widget.weightValue} kg',
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.add_circle),
+                    onPressed: () {
+                      if (widget.weightValue < 200) {
+                        widget.onWeightChanged(widget.weightValue + 1);
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// BMI Result Card Widget
+class BMIResultCard extends StatelessWidget {
+  final double bmi;
+  final String category;
+  final Color color;
+
+  const BMIResultCard({
+    Key? key,
+    required this.bmi,
+    required this.category,
+    required this.color,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return RepeatContainer(
+      color: color,
+      borderRadius: BorderRadius.circular(20),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.15),
+          blurRadius: 15,
+          offset: const Offset(0, 5),
+        ),
+      ],
+      child: Column(
+        children: [
+          const Text(
+            'Your BMI Result',
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(height: 15),
+          Text(
+            bmi.toStringAsFixed(1),
+            style: const TextStyle(
+              fontSize: 56,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            category,
+            style: const TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(height: 15),
+          // BMI scale visualization
+          Container(
+            height: 20,
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.3),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 185,
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        bottomLeft: Radius.circular(10),
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 650,
+                  child: Container(
+                    color: Colors.green,
+                  ),
+                ),
+                Expanded(
+                  flex: 500,
+                  child: Container(
+                    color: Colors.orange,
+                  ),
+                ),
+                Expanded(
+                  flex: 700,
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(10),
+                        bottomRight: Radius.circular(10),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 10),
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Under', style: TextStyle(color: Colors.white)),
+              Text('Normal', style: TextStyle(color: Colors.white)),
+              Text('Over', style: TextStyle(color: Colors.white)),
+              Text('Obese', style: TextStyle(color: Colors.white)),
+            ],
+          ),
+          const SizedBox(height: 15),
+          Text(
+            _getBMIDescription(category),
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 16,
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  
+  String _getBMIDescription(String category) {
+    switch (category) {
+      case 'Underweight':
+        return 'You may need to gain weight. Consult with a healthcare provider.';
+      case 'Normal weight':
+        return 'Congratulations! You have a healthy weight.';
+      case 'Overweight':
+        return 'Consider adopting healthier eating habits and increasing physical activity.';
+      case 'Obese':
+        return 'It\'s recommended to consult with a healthcare provider for a weight loss plan.';
+      default:
+        return '';
+    }
+  }
+}
+
 void main() {
   runApp(const BMICalculatorApp());
 }
 
 class BMICalculatorApp extends StatelessWidget {
-  const BMICalculatorApp({super.key});
+  const BMICalculatorApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +427,7 @@ class BMICalculatorApp extends StatelessWidget {
 }
 
 class BMICalculator extends StatefulWidget {
-  const BMICalculator({super.key});
+  const BMICalculator({Key? key}) : super(key: key);
 
   @override
   State<BMICalculator> createState() => _BMICalculatorState();
@@ -106,9 +436,9 @@ class BMICalculator extends StatefulWidget {
 class _BMICalculatorState extends State<BMICalculator> {
   final TextEditingController _heightController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
-  double _heightSliderValue = 170.0; // New slider for height
-  int _weightStepperValue = 70; // New stepper for weight
-  bool _useSliders = false; // Toggle between text fields and sliders
+  double _heightSliderValue = 170.0;
+  int _weightStepperValue = 70;
+  bool _useSliders = false;
   double _bmi = 0.0;
   String _bmiCategory = '';
 
@@ -117,7 +447,7 @@ class _BMICalculatorState extends State<BMICalculator> {
     double weight;
 
     if (_useSliders) {
-      heightInMeters = _heightSliderValue / 100; // Convert cm to meters
+      heightInMeters = _heightSliderValue / 100;
       weight = _weightStepperValue.toDouble();
     } else {
       final heightText = _heightController.text;
@@ -130,7 +460,7 @@ class _BMICalculatorState extends State<BMICalculator> {
         return;
       }
 
-      heightInMeters = double.parse(heightText) / 100; // Convert cm to meters
+      heightInMeters = double.parse(heightText) / 100;
       weight = double.parse(weightText);
     }
 
@@ -176,10 +506,9 @@ class _BMICalculatorState extends State<BMICalculator> {
       appBar: AppBar(
         title: const Text('BMI Calculator'),
         actions: [
-          IconButton(
-            icon: Icon(_useSliders ? Icons.text_fields : Icons.slideshow),
-            onPressed: _toggleInputMethod,
-            tooltip: _useSliders ? 'Switch to Text Fields' : 'Switch to Sliders',
+          InputMethodToggle(
+            useSliders: _useSliders,
+            onToggle: _toggleInputMethod,
           ),
         ],
       ),
@@ -207,134 +536,27 @@ class _BMICalculatorState extends State<BMICalculator> {
               ),
               const SizedBox(height: 30),
               
-              // Improved layout with Row and Container widgets
-              if (!_useSliders) ...[
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        spreadRadius: 2,
-                        blurRadius: 5,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      children: [
-                        TextField(
-                          controller: _heightController,
-                          keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(
-                            labelText: 'Height (cm)',
-                            prefixIcon: Icon(Icons.height),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        TextField(
-                          controller: _weightController,
-                          keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(
-                            labelText: 'Weight (kg)',
-                            prefixIcon: Icon(Icons.monitor_weight),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+              // Input cards based on selected method
+              if (!_useSliders)
+                TextInputCard(
+                  heightController: _heightController,
+                  weightController: _weightController,
+                )
+              else
+                SliderInputCard(
+                  heightValue: _heightSliderValue,
+                  weightValue: _weightStepperValue,
+                  onHeightChanged: (value) {
+                    setState(() {
+                      _heightSliderValue = value;
+                    });
+                  },
+                  onWeightChanged: (value) {
+                    setState(() {
+                      _weightStepperValue = value.toInt();
+                    });
+                  },
                 ),
-              ] else ...[
-                // Slider input method
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        spreadRadius: 2,
-                        blurRadius: 5,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Height: ${170} cm',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Slider(
-                          value: _heightSliderValue,
-                          min: 100,
-                          max: 250,
-                          divisions: 150,
-                          label: _heightSliderValue.round().toString(),
-                          onChanged: (double value) {
-                            setState(() {
-                              _heightSliderValue = value;
-                            });
-                          },
-                        ),
-                        const SizedBox(height: 20),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'Weight: ',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Row(
-                              children: [
-                                IconButton(
-                                  icon: const Icon(Icons.remove_circle),
-                                  onPressed: () {
-                                    setState(() {
-                                      if (_weightStepperValue > 30) {
-                                        _weightStepperValue--;
-                                      }
-                                    });
-                                  },
-                                ),
-                                Text(
-                                  '$_weightStepperValue kg',
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.add_circle),
-                                  onPressed: () {
-                                    setState(() {
-                                      if (_weightStepperValue < 200) {
-                                        _weightStepperValue++;
-                                      }
-                                    });
-                                  },
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
               
               const SizedBox(height: 30),
               
@@ -352,140 +574,17 @@ class _BMICalculatorState extends State<BMICalculator> {
               const SizedBox(height: 30),
               
               // Improved result display with better layout
-              if (_bmi > 0) ...[
-                Container(
-                  padding: const EdgeInsets.all(25),
-                  decoration: BoxDecoration(
-                    color: _getBMIColor(_bmi),
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.15),
-                        blurRadius: 15,
-                        offset: const Offset(0, 5),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      const Text(
-                        'Your BMI Result',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(height: 15),
-                      Text(
-                        _bmi.toStringAsFixed(1),
-                        style: const TextStyle(
-                          fontSize: 56,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                        _bmiCategory,
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(height: 15),
-                      // BMI scale visualization
-                      Container(
-                        height: 20,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.3),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              flex: 185,
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                  color: Colors.blue,
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(10),
-                                    bottomLeft: Radius.circular(10),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 650,
-                              child: Container(
-                                color: Colors.green,
-                              ),
-                            ),
-                            Expanded(
-                              flex: 500,
-                              child: Container(
-                                color: Colors.orange,
-                              ),
-                            ),
-                            Expanded(
-                              flex: 700,
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                  color: Colors.red,
-                                  borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(10),
-                                    bottomRight: Radius.circular(10),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      const Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('Under', style: TextStyle(color: Colors.white)),
-                          Text('Normal', style: TextStyle(color: Colors.white)),
-                          Text('Over', style: TextStyle(color: Colors.white)),
-                          Text('Obese', style: TextStyle(color: Colors.white)),
-                        ],
-                      ),
-                      const SizedBox(height: 15),
-                      Text(
-                        _getBMIDescription(_bmiCategory),
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
+              if (_bmi > 0)
+                BMIResultCard(
+                  bmi: _bmi,
+                  category: _bmiCategory,
+                  color: _getBMIColor(_bmi),
                 ),
-              ],
             ],
           ),
         ),
       ),
     );
-  }
-
-  String _getBMIDescription(String category) {
-    switch (category) {
-      case 'Underweight':
-        return 'You may need to gain weight. Consult with a healthcare provider.';
-      case 'Normal weight':
-        return 'Congratulations! You have a healthy weight.';
-      case 'Overweight':
-        return 'Consider adopting healthier eating habits and increasing physical activity.';
-      case 'Obese':
-        return 'It\'s recommended to consult with a healthcare provider for a weight loss plan.';
-      default:
-        return '';
-    }
   }
 
   @override
