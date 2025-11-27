@@ -67,9 +67,10 @@ class _SliderInputCardState extends State<SliderInputCard> {
                   // Decrease weight button with gesture detector
                   GestureDetector(
                     onTap: () {
-                      if (widget.weightValue > 30) { // Minimum weight limit
-                        widget.onWeightChanged(widget.weightValue - 1);
-                      }
+                      // Use ternary operator to check weight limit
+                      widget.weightValue > 30 
+                        ? widget.onWeightChanged(widget.weightValue - 1)
+                        : null;
                     },
                     child: const DecreaseIcon(),
                   ),
@@ -78,9 +79,10 @@ class _SliderInputCardState extends State<SliderInputCard> {
                   // Increase weight button with gesture detector
                   GestureDetector(
                     onTap: () {
-                      if (widget.weightValue < 200) { // Maximum weight limit
-                        widget.onWeightChanged(widget.weightValue + 1);
-                      }
+                      // Use ternary operator to check weight limit
+                      widget.weightValue < 200 
+                        ? widget.onWeightChanged(widget.weightValue + 1)
+                        : null;
                     },
                     child: const IncreaseIcon(),
                   ),

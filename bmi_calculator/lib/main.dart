@@ -70,26 +70,21 @@ class _BMICalculatorState extends State<BMICalculator> {
     double weight;
 
     // Use different input methods based on toggle state
-    if (_inputMethod == InputMethod.slider) {
-      // Use slider/stepper values
-      heightInMeters = _heightSliderValue / 100; // Convert cm to meters
-      weight = _weightStepperValue.toDouble();
-    } else {
-      // Use text field values
-      final heightText = _heightController.text;
-      final weightText = _weightController.text;
+    heightInMeters = _inputMethod == InputMethod.slider 
+        ? _heightSliderValue / 100 // Convert cm to meters
+        : double.parse(_heightController.text.isEmpty ? '0' : _heightController.text) / 100;
+        
+    weight = _inputMethod == InputMethod.slider 
+        ? _weightStepperValue.toDouble()
+        : double.parse(_weightController.text.isEmpty ? '0' : _weightController.text);
 
-      // Validate input
-      if (heightText.isEmpty || weightText.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please enter both height and weight')),
-        );
-        return;
-      }
-
-      // Parse input values
-      heightInMeters = double.parse(heightText) / 100; // Convert cm to meters
-      weight = double.parse(weightText);
+    // Validate input
+    if ((_inputMethod == InputMethod.text) && 
+        (_heightController.text.isEmpty || _weightController.text.isEmpty)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter both height and weight')),
+      );
+      return;
     }
 
     // Update state with calculated BMI
@@ -140,28 +135,25 @@ class _BMICalculatorState extends State<BMICalculator> {
               const SizedBox(height: 30),
               
               // Input cards based on selected method
-              if (_inputMethod == InputMethod.text)
-                // Text input method
-                TextInputCard(
-                  heightController: _heightController,
-                  weightController: _weightController,
-                )
-              else
-                // Slider input method
-                SliderInputCard(
-                  heightValue: _heightSliderValue,
-                  weightValue: _weightStepperValue,
-                  onHeightChanged: (value) {
-                    setState(() {
-                      _heightSliderValue = value;
-                    });
-                  },
-                  onWeightChanged: (value) {
-                    setState(() {
-                      _weightStepperValue = value.toInt();
-                    });
-                  },
-                ),
+              _inputMethod == InputMethod.text
+                ? TextInputCard(
+                    heightController: _heightController,
+                    weightController: _weightController,
+                  )
+                : SliderInputCard(
+                    heightValue: _heightSliderValue,
+                    weightValue: _weightStepperValue,
+                    onHeightChanged: (value) {
+                      setState(() {
+                        _heightSliderValue = value;
+                      });
+                    },
+                    onWeightChanged: (value) {
+                      setState(() {
+                        _weightStepperValue = value.toInt();
+                      });
+                    },
+                  ),
               
               const SizedBox(height: 30),
               
@@ -179,12 +171,13 @@ class _BMICalculatorState extends State<BMICalculator> {
               const SizedBox(height: 30),
               
               // Display BMI result if calculated
-              if (_bmi > 0)
-                BMIResultCard(
-                  bmi: _bmi,
-                  category: _bmiCategory,
-                  color: _getBMIColor(_bmiCategory),
-                ),
+              _bmi > 0
+                ? BMIResultCard(
+                    bmi: _bmi,
+                    category: _bmiCategory,
+                    color: _getBMIColor(_bmiCategory),
+                  )
+                : const SizedBox.shrink(),
             ],
           ),
         ),

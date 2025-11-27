@@ -21,9 +21,9 @@ class InputMethodToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Determine which input method to show based on current state
+    // Use ternary operators to determine current and next methods
     final InputMethod currentMethod = useSliders ? InputMethod.slider : InputMethod.text;
-    final InputMethod nextMethod = currentMethod.toggle;
+    final InputMethod nextMethod = currentMethod == InputMethod.text ? InputMethod.slider : InputMethod.text;
     
     return IconButton(
       icon: nextMethod.icon, // Toggle icon from enum

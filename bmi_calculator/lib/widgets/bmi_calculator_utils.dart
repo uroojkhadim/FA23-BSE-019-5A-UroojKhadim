@@ -7,20 +7,20 @@ import 'bmi_category.dart';
 class BMICalculatorUtils {
   /// Calculate BMI based on height (in meters) and weight (in kg)
   static double calculateBMI(double heightInMeters, double weight) {
-    return weight / (heightInMeters * heightInMeters);
+    // Use ternary operator to prevent division by zero
+    return heightInMeters > 0 ? weight / (heightInMeters * heightInMeters) : 0.0;
   }
 
   /// Determine BMI category based on calculated value
   static BMICategory getBMICategory(double bmi) {
-    if (bmi < 18.5) {
-      return BMICategory.underweight;
-    } else if (bmi >= 18.5 && bmi < 25) {
-      return BMICategory.normal;
-    } else if (bmi >= 25 && bmi < 30) {
-      return BMICategory.overweight;
-    } else {
-      return BMICategory.obese;
-    }
+    // Use ternary operators to determine category
+    return bmi < 18.5 
+        ? BMICategory.underweight 
+        : bmi < 25 
+            ? BMICategory.normal 
+            : bmi < 30 
+                ? BMICategory.overweight 
+                : BMICategory.obese;
   }
 
   /// Get color associated with BMI category
