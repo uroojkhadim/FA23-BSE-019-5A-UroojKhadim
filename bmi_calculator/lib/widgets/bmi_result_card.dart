@@ -133,4 +133,20 @@ class BMIResultCard extends StatelessWidget {
         return '';
     }
   }
+  
+  /// Get detailed information about each BMI category
+  static String _getDetailedCategoryInfo(String category) {
+    switch (category) {
+      case 'Underweight':
+        return 'BMI below 18.5. Consider consulting a nutritionist for a healthy weight gain plan.';
+      case 'Normal weight':
+        return 'BMI between 18.5 and 24.9. Maintain your healthy lifestyle!';
+      case 'Overweight':
+        return 'BMI between 25 and 29.9. Small dietary and exercise changes can make a big difference.';
+      case 'Obese':
+        return 'BMI of 30 or higher. Professional medical guidance is recommended for safe weight loss.';
+      default:
+        return 'BMI information not available.';
+    }
+  }
 }

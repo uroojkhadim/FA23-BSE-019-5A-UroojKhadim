@@ -51,7 +51,7 @@ class _SliderInputCardState extends State<SliderInputCard> {
             onChanged: widget.onHeightChanged, // Callback when value changes
           ),
           const SizedBox(height: 20), // Spacing
-          // Weight stepper controls
+          // Weight stepper controls with gesture detection
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -64,25 +64,25 @@ class _SliderInputCardState extends State<SliderInputCard> {
               ),
               Row(
                 children: [
-                  // Decrease weight button
-                  IconButton(
-                    icon: const DecreaseIcon(),
-                    onPressed: () {
+                  // Decrease weight button with gesture detector
+                  GestureDetector(
+                    onTap: () {
                       if (widget.weightValue > 30) { // Minimum weight limit
                         widget.onWeightChanged(widget.weightValue - 1);
                       }
                     },
+                    child: const DecreaseIcon(),
                   ),
                   // Display current weight value
                   WeightValueText(weight: widget.weightValue),
-                  // Increase weight button
-                  IconButton(
-                    icon: const IncreaseIcon(),
-                    onPressed: () {
+                  // Increase weight button with gesture detector
+                  GestureDetector(
+                    onTap: () {
                       if (widget.weightValue < 200) { // Maximum weight limit
                         widget.onWeightChanged(widget.weightValue + 1);
                       }
                     },
+                    child: const IncreaseIcon(),
                   ),
                 ],
               ),
