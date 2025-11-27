@@ -13,6 +13,7 @@ import 'widgets/bmi_calculator_callbacks.dart';
 import 'widgets/constants/spacing_constants.dart';
 import 'widgets/custom_fab.dart';
 import 'widgets/bmi_info_screen.dart';
+import 'widgets/bmi_history_screen.dart';
 
 // =============================================================================
 // MAIN APPLICATION
@@ -71,20 +72,38 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
   // Results from BMI calculation
   double _bmi = 0.0;
   BMICategory _category = BMICategory.normal;
+  
+  // BMI history
+  final List<BMIHistoryItem> _bmiHistory = [];
 
   /// Calculates BMI and updates the result
   void _calculateBMI() {
+    // Get current values
+    final double height = _inputMethod == InputMethod.slider ? _height : 
+        (_heightController.text.isEmpty ? 0 : double.parse(_heightController.text));
+    final double weight = _inputMethod == InputMethod.slider ? _weight : 
+        (_weightController.text.isEmpty ? 0 : double.parse(_weightController.text));
+        
     // Create function object for BMI calculation
     final bmiCalculator = BMICalculatorCallbacks.createBMICalculator(
-      _inputMethod == InputMethod.slider ? _height : 
-          (_heightController.text.isEmpty ? 0 : double.parse(_heightController.text)),
-      _inputMethod == InputMethod.slider ? _weight : 
-          (_weightController.text.isEmpty ? 0 : double.parse(_weightController.text)),
+      height,
+      weight,
       (bmi, category) {
         // Success callback
         setState(() {
           _bmi = bmi;
           _category = category;
+          
+          // Add to history
+          _bmiHistory.add(
+            BMIHistoryItem(
+              date: DateTime.now(),
+              height: height,
+              weight: weight,
+              bmi: bmi,
+              category: category,
+            ),
+          );
         });
       },
       (errorMessage) {
@@ -255,6 +274,23 @@ class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
                     Navigator.pushNamed(context, '/bmi-info');
                   },
                   child: const Text('Learn more about BMI'),
+                ),
+              ),
+              
+              const SizedBox(height: SpacingConstants.small),
+              
+              // Button to navigate to BMI history screen
+              Center(
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BMIHistoryScreen(history: _bmiHistory),
+                      ),
+                    );
+                  },
+                  child: const Text('View BMI History'),
                 ),
               ),
               

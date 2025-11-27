@@ -75,6 +75,41 @@ class BMIInfoScreen extends StatelessWidget {
               const SizedBox(height: SpacingConstants.large),
               
               const Text(
+                'BMI Formula',
+                style: TextStyleConstants.mediumTitle,
+              ),
+              const SizedBox(height: SpacingConstants.medium),
+              
+              Container(
+                padding: SpacingConstants.defaultPadding,
+                decoration: BoxDecoration(
+                  color: ColorConstants.lightBackground,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: ColorConstants.primaryGreen.withOpacity(0.3)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'BMI = weight (kg) / [height (m)]²',
+                      style: TextStyleConstants.mediumBody,
+                    ),
+                    const SizedBox(height: SpacingConstants.small),
+                    const Text(
+                      'Example: If you weigh 70 kg and are 1.75 m tall, your BMI is:',
+                      style: TextStyleConstants.smallBody,
+                    ),
+                    const SizedBox(height: SpacingConstants.small),
+                    const Text(
+                      'BMI = 70 / (1.75)² = 22.9',
+                      style: TextStyleConstants.mediumBody,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: SpacingConstants.large),
+              
+              const Text(
                 'Health Tips',
                 style: TextStyleConstants.mediumTitle,
               ),
@@ -95,6 +130,47 @@ class BMIInfoScreen extends StatelessWidget {
               _buildHealthTip(
                 'Monitor Your Progress',
                 'Regularly check your BMI to stay aware of changes in your weight status.',
+              ),
+              const SizedBox(height: SpacingConstants.small),
+              
+              _buildHealthTip(
+                'Consult a Healthcare Professional',
+                'If you have concerns about your BMI or weight, consult with a doctor or nutritionist.',
+              ),
+              const SizedBox(height: SpacingConstants.large),
+              
+              const Text(
+                'Limitations of BMI',
+                style: TextStyleConstants.mediumTitle,
+              ),
+              const SizedBox(height: SpacingConstants.medium),
+              
+              Container(
+                padding: SpacingConstants.defaultPadding,
+                decoration: BoxDecoration(
+                  color: ColorConstants.lightBackground,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Colors.orange.withOpacity(0.3)),
+                ),
+                child: const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '• BMI may not accurately reflect body fatness for all individuals',
+                      style: TextStyleConstants.smallBody,
+                    ),
+                    SizedBox(height: SpacingConstants.small),
+                    Text(
+                      '• Athletes may have high BMI due to muscle mass rather than fat',
+                      style: TextStyleConstants.smallBody,
+                    ),
+                    SizedBox(height: SpacingConstants.small),
+                    Text(
+                      '• BMI may not be accurate for elderly people or pregnant women',
+                      style: TextStyleConstants.smallBody,
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: SpacingConstants.large),
               
