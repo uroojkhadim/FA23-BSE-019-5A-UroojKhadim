@@ -7,6 +7,8 @@ import 'widgets/slider_input_card.dart';
 import 'widgets/bmi_result_card.dart';
 import 'widgets/bmi_calculator_utils.dart';
 import 'widgets/text_widgets.dart';
+import 'widgets/input_method.dart';
+import 'widgets/bmi_category.dart';
 
 // =============================================================================
 // MAIN APPLICATION
@@ -55,12 +57,12 @@ class _BMICalculatorState extends State<BMICalculator> {
   double _heightSliderValue = 170.0; // Default height (170 cm)
   int _weightStepperValue = 70; // Default weight (70 kg)
   
-  // Flag to toggle between input methods
-  bool _useSliders = false;
+  // Input method state using enum
+  InputMethod _inputMethod = InputMethod.text;
   
   // Results from BMI calculation
   double _bmi = 0.0;
-  String _bmiCategory = '';
+  BMICategory _bmiCategory = BMICategory.normal;
 
   /// Calculate BMI based on input values
   void _calculateBMI() {
@@ -68,7 +70,7 @@ class _BMICalculatorState extends State<BMICalculator> {
     double weight;
 
     // Use different input methods based on toggle state
-    if (_useSliders) {
+    if (_inputMethod == InputMethod.slider) {
       // Use slider/stepper values
       heightInMeters = _heightSliderValue / 100; // Convert cm to meters
       weight = _weightStepperValue.toDouble();
@@ -98,14 +100,14 @@ class _BMICalculatorState extends State<BMICalculator> {
   }
 
   /// Get color associated with BMI category
-  Color _getBMIColor(double bmi) {
-    return BMICalculatorUtils.getBMIColor(bmi);
+  Color _getBMIColor(BMICategory category) {
+    return BMICalculatorUtils.getBMIColor(category);
   }
 
   /// Toggle between text input and slider input methods
   void _toggleInputMethod() {
     setState(() {
-      _useSliders = !_useSliders; // Flip the boolean flag
+      _inputMethod = _inputMethod.toggle; // Toggle input method using enum
     });
   }
 
@@ -117,7 +119,7 @@ class _BMICalculatorState extends State<BMICalculator> {
         title: const Text('BMI Calculator'),
         actions: [
           InputMethodToggle(
-            useSliders: _useSliders,
+            useSliders: _inputMethod == InputMethod.slider,
             onToggle: _toggleInputMethod,
           ),
         ],
@@ -138,7 +140,7 @@ class _BMICalculatorState extends State<BMICalculator> {
               const SizedBox(height: 30),
               
               // Input cards based on selected method
-              if (!_useSliders)
+              if (_inputMethod == InputMethod.text)
                 // Text input method
                 TextInputCard(
                   heightController: _heightController,
@@ -181,7 +183,7 @@ class _BMICalculatorState extends State<BMICalculator> {
                 BMIResultCard(
                   bmi: _bmi,
                   category: _bmiCategory,
-                  color: _getBMIColor(_bmi),
+                  color: _getBMIColor(_bmiCategory),
                 ),
             ],
           ),

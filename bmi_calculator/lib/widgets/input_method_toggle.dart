@@ -1,6 +1,7 @@
 // Import the Flutter material design library
 import 'package:flutter/material.dart';
 import 'icon_widgets.dart';
+import 'input_method.dart';
 
 /// Input Method Toggle Widget
 /// Provides a button to switch between text input and slider input methods
@@ -20,10 +21,14 @@ class InputMethodToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Determine which input method to show based on current state
+    final InputMethod currentMethod = useSliders ? InputMethod.slider : InputMethod.text;
+    final InputMethod nextMethod = currentMethod.toggle;
+    
     return IconButton(
-      icon: useSliders ? const TextInputIcon() : const SliderInputIcon(), // Toggle icon
+      icon: nextMethod.icon, // Toggle icon from enum
       onPressed: onToggle, // Execute callback when pressed
-      tooltip: useSliders ? 'Switch to Text Fields' : 'Switch to Sliders',
+      tooltip: nextMethod.tooltip, // Tooltip from enum
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'repeat_container.dart';
 import 'text_widgets.dart';
 import '../widgets/app_theme.dart';
+import 'bmi_category.dart';
 
 /// BMI Result Card Widget
 /// Displays the calculated BMI result with category and visualization
@@ -11,7 +12,7 @@ class BMIResultCard extends StatelessWidget {
   final double bmi;
   
   /// BMI category (Underweight, Normal, etc.)
-  final String category;
+  final BMICategory category;
   
   /// Color associated with the BMI category
   final Color color;
@@ -45,7 +46,7 @@ class BMIResultCard extends StatelessWidget {
           BMIValueText(bmi: bmi),
           const SizedBox(height: 10),
           // BMI category display
-          CategoryLabelText(category: category),
+          CategoryLabelText(category: category.displayName),
           const SizedBox(height: 15),
           // Visual BMI scale representation
           Container(
@@ -112,41 +113,9 @@ class BMIResultCard extends StatelessWidget {
           ),
           const SizedBox(height: 15),
           // Description based on BMI category
-          CategoryDescriptionText(description: _getBMIDescription(category)),
+          CategoryDescriptionText(description: category.description),
         ],
       ),
     );
-  }
-  
-  /// Get descriptive text for each BMI category
-  static String _getBMIDescription(String category) {
-    switch (category) {
-      case 'Underweight':
-        return 'You may need to gain weight. Consult with a healthcare provider.';
-      case 'Normal weight':
-        return 'Congratulations! You have a healthy weight.';
-      case 'Overweight':
-        return 'Consider adopting healthier eating habits and increasing physical activity.';
-      case 'Obese':
-        return 'It\'s recommended to consult with a healthcare provider for a weight loss plan.';
-      default:
-        return '';
-    }
-  }
-  
-  /// Get detailed information about each BMI category
-  static String _getDetailedCategoryInfo(String category) {
-    switch (category) {
-      case 'Underweight':
-        return 'BMI below 18.5. Consider consulting a nutritionist for a healthy weight gain plan.';
-      case 'Normal weight':
-        return 'BMI between 18.5 and 24.9. Maintain your healthy lifestyle!';
-      case 'Overweight':
-        return 'BMI between 25 and 29.9. Small dietary and exercise changes can make a big difference.';
-      case 'Obese':
-        return 'BMI of 30 or higher. Professional medical guidance is recommended for safe weight loss.';
-      default:
-        return 'BMI information not available.';
-    }
   }
 }
