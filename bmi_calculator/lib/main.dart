@@ -11,6 +11,7 @@ import 'widgets/input_method.dart';
 import 'widgets/bmi_category.dart';
 import 'widgets/bmi_calculator_callbacks.dart';
 import 'widgets/constants/spacing_constants.dart';
+import 'widgets/custom_fab.dart';
 
 // =============================================================================
 // MAIN APPLICATION
@@ -29,56 +30,57 @@ class BMICalculatorApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // MaterialApp provides app-wide configuration
     return MaterialApp(
-      title: 'BMI Calculator', // App title
-      theme: BMICalculatorTheme.lightTheme, // Apply custom theme
-      home: const BMICalculator(), // Set home screen
+      title: 'BMI Calculator',
+      theme: BMICalculatorTheme.lightTheme,
+      home: const BMICalculatorScreen(),
     );
   }
 }
 
-/// Main BMI calculator screen
-/// This stateful widget manages the UI and calculation logic
-class BMICalculator extends StatefulWidget {
+// =============================================================================
+// MAIN SCREEN
+// =============================================================================
+
+/// Main screen of the BMI calculator app
+/// Contains all the UI elements and logic for calculating BMI
+class BMICalculatorScreen extends StatefulWidget {
   /// Constructor with key parameter
-  const BMICalculator({Key? key}) : super(key: key);
+  const BMICalculatorScreen({Key? key}) : super(key: key);
 
   @override
-  State<BMICalculator> createState() => _BMICalculatorState();
+  State<BMICalculatorScreen> createState() => _BMICalculatorScreenState();
 }
 
-/// State class for BMICalculator
-/// Manages the state and business logic for the BMI calculator
-class _BMICalculatorState extends State<BMICalculator> {
+class _BMICalculatorScreenState extends State<BMICalculatorScreen> {
   // Controllers for text input fields
   final TextEditingController _heightController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
   
   // Values for slider and stepper inputs
-  double _heightSliderValue = 170.0; // Default height (170 cm)
-  int _weightStepperValue = 70; // Default weight (70 kg)
+  double _height = 170.0; // Default height (170 cm)
+  double _weight = 70.0; // Default weight (70 kg)
   
   // Input method state using enum
   InputMethod _inputMethod = InputMethod.text;
   
   // Results from BMI calculation
   double _bmi = 0.0;
-  BMICategory _bmiCategory = BMICategory.normal;
+  BMICategory _category = BMICategory.normal;
 
-  /// Calculate BMI based on input values using function objects
+  /// Calculates BMI and updates the result
   void _calculateBMI() {
     // Create function object for BMI calculation
     final bmiCalculator = BMICalculatorCallbacks.createBMICalculator(
-      _inputMethod == InputMethod.slider ? _heightSliderValue : 
+      _inputMethod == InputMethod.slider ? _height : 
           (_heightController.text.isEmpty ? 0 : double.parse(_heightController.text)),
-      _inputMethod == InputMethod.slider ? _weightStepperValue.toDouble() : 
+      _inputMethod == InputMethod.slider ? _weight : 
           (_weightController.text.isEmpty ? 0 : double.parse(_weightController.text)),
       (bmi, category) {
         // Success callback
         setState(() {
           _bmi = bmi;
-          _bmiCategory = category;
+          _category = category;
         });
       },
       (errorMessage) {
@@ -122,27 +124,11 @@ class _BMICalculatorState extends State<BMICalculator> {
   }
 
   /// Get color associated with BMI category
-  Color _getBMIColor(BMICategory category) {
+  Color _getColorForCategory(BMICategory category) {
     return BMICalculatorUtils.getBMIColor(category);
   }
 
-  /// Toggle between text input and slider input methods using function objects
-  void _toggleInputMethod() {
-    // Create function object for toggling input method
-    final toggleFunction = BMICalculatorCallbacks.createInputMethodToggle(
-      () {
-        // Toggle callback
-        setState(() {
-          _inputMethod = _inputMethod.toggle;
-        });
-      },
-    );
-    
-    // Execute toggle
-    toggleFunction();
-  }
-
-  /// Reset all values using function objects
+  /// Resets all input values to defaults
   void _resetValues() {
     // Create function object for resetting values
     final resetFunction = BMICalculatorCallbacks.createResetFunction(
@@ -151,10 +137,10 @@ class _BMICalculatorState extends State<BMICalculator> {
         setState(() {
           _heightController.clear();
           _weightController.clear();
-          _heightSliderValue = 170.0;
-          _weightStepperValue = 70;
+          _height = 170.0;
+          _weight = 70.0;
           _bmi = 0.0;
-          _bmiCategory = BMICategory.normal;
+          _category = BMICategory.normal;
         });
       },
       (message) {
@@ -175,22 +161,10 @@ class _BMICalculatorState extends State<BMICalculator> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // App bar with title and input method toggle
       appBar: AppBar(
         title: const Text('BMI Calculator'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _resetValues,
-            tooltip: 'Reset Values',
-          ),
-          InputMethodToggle(
-            useSliders: _inputMethod == InputMethod.slider,
-            onToggle: _toggleInputMethod,
-          ),
-        ],
+        centerTitle: true,
       ),
-      // Main content area with scrollable layout
       body: SingleChildScrollView(
         child: Padding(
           padding: SpacingConstants.defaultPadding,
@@ -205,100 +179,81 @@ class _BMICalculatorState extends State<BMICalculator> {
               const AppDescriptionText(),
               const SizedBox(height: SpacingConstants.huge),
               
-              // Section header for input
-              const SectionHeaderText(text: 'Enter Your Details'),
+              // Input method toggle
+              InputMethodToggle(
+                useSliders: _inputMethod == InputMethod.slider,
+                onToggle: () {
+                  setState(() {
+                    _inputMethod = _inputMethod.toggle;
+                  });
+                },
+              ),
               const SizedBox(height: SpacingConstants.large),
               
-              // Input cards based on selected method using conditional renderer
-              BMICalculatorCallbacks.createConditionalRenderer(
-                _inputMethod == InputMethod.text,
+              // Input cards based on selected method
+              if (_inputMethod == InputMethod.text)
                 TextInputCard(
                   heightController: _heightController,
                   weightController: _weightController,
-                ),
+                )
+              else
                 SliderInputCard(
-                  heightValue: _heightSliderValue,
-                  weightValue: _weightStepperValue,
+                  heightValue: _height,
+                  weightValue: _weight.toInt(),
                   onHeightChanged: (value) {
-                    // Create function object for height change
-                    final heightChanger = BMICalculatorCallbacks.createHeightChanger(
-                      _heightSliderValue,
-                      100.0,
-                      250.0,
-                      (newHeight) {
-                        // Change callback
-                        setState(() {
-                          _heightSliderValue = newHeight;
-                        });
-                      },
-                    );
-                    
-                    // Execute height change
-                    heightChanger(value);
+                    setState(() {
+                      _height = value;
+                    });
                   },
                   onWeightChanged: (value) {
-                    // Create function object for weight change
-                    final weightChanger = BMICalculatorCallbacks.createWeightChanger(
-                      _weightStepperValue,
-                      30,
-                      200,
-                      (newWeight) {
-                        // Change callback
-                        setState(() {
-                          _weightStepperValue = newWeight;
-                        });
-                      },
-                    );
-                    
-                    // Execute weight change
-                    weightChanger(value);
+                    setState(() {
+                      _weight = value.toDouble();
+                    });
                   },
                 ),
-              )(),
-              
-              const SizedBox(height: SpacingConstants.huge),
+              const SizedBox(height: SpacingConstants.extraLarge),
               
               // Calculate button
               Center(
                 child: ElevatedButton(
-                  onPressed: _calculateBMI, // Trigger BMI calculation
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                    child: Text('Calculate BMI'),
+                  onPressed: _calculateBMI,
+                  style: ElevatedButton.styleFrom(
+                    padding: SpacingConstants.buttonPadding,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                  child: const Text(
+                    'Calculate BMI',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
+              const SizedBox(height: SpacingConstants.large),
               
-              const SizedBox(height: SpacingConstants.huge),
-              
-              // Display BMI result if calculated using conditional renderer
-              BMICalculatorCallbacks.createConditionalRenderer(
-                _bmi > 0,
-                Column(
-                  children: [
-                    const SectionHeaderText(text: 'Your Results'),
-                    const SizedBox(height: SpacingConstants.large),
-                    BMIResultCard(
-                      bmi: _bmi,
-                      category: _bmiCategory,
-                      color: _getBMIColor(_bmiCategory),
-                    ),
-                  ],
+              // BMI result card
+              if (_bmi > 0)
+                BMIResultCard(
+                  bmi: _bmi,
+                  category: _category,
+                  color: _getColorForCategory(_category),
                 ),
-                const SizedBox.shrink(),
-              )(),
+              
+              const SizedBox(height: SpacingConstants.extraLarge),
             ],
           ),
         ),
       ),
+      // Custom Floating Action Button for resetting values
+      floatingActionButton: CustomFAB(
+        icon: Icons.refresh,
+        onPressed: _resetValues,
+        tooltip: 'Reset Values',
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
-  }
-
-  /// Clean up resources when widget is disposed
-  @override
-  void dispose() {
-    _heightController.dispose(); // Dispose height controller
-    _weightController.dispose(); // Dispose weight controller
-    super.dispose();
   }
 }
