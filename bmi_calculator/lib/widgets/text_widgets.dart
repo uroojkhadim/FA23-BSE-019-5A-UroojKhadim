@@ -1,5 +1,7 @@
 // Import the Flutter material design library
 import 'package:flutter/material.dart';
+import 'constants/text_style_constants.dart';
+import 'constants/spacing_constants.dart';
 
 /// Title text widget for the app
 class AppTitleText extends StatelessWidget {
@@ -10,11 +12,7 @@ class AppTitleText extends StatelessWidget {
     return const Text(
       'Calculate Your Body Mass Index',
       textAlign: TextAlign.center,
-      style: TextStyle(
-        fontSize: 24,
-        fontWeight: FontWeight.bold,
-        color: Colors.green,
-      ),
+      style: TextStyleConstants.largeTitle,
     );
   }
 }
@@ -28,7 +26,7 @@ class AppDescriptionText extends StatelessWidget {
     return const Text(
       'Enter your height and weight to calculate BMI',
       textAlign: TextAlign.center,
-      style: TextStyle(fontSize: 16, color: Colors.grey),
+      style: TextStyleConstants.largeBody,
     );
   }
 }
@@ -41,11 +39,7 @@ class BMIResultHeaderText extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Text(
       'Your BMI Result',
-      style: TextStyle(
-        fontSize: 22,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
-      ),
+      style: TextStyleConstants.mediumTitle,
     );
   }
 }
@@ -60,11 +54,7 @@ class CategoryLabelText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       category,
-      style: const TextStyle(
-        fontSize: 24,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
-      ),
+      style: TextStyleConstants.bmiCategory,
     );
   }
 }
@@ -79,11 +69,7 @@ class ScaleLabelText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: const TextStyle(
-        color: Colors.white,
-        fontSize: 12,
-        fontWeight: FontWeight.bold,
-      ),
+      style: TextStyleConstants.scaleLabel,
     );
   }
 }
@@ -99,10 +85,7 @@ class CategoryDescriptionText extends StatelessWidget {
     return Text(
       description,
       textAlign: TextAlign.center,
-      style: const TextStyle(
-        fontSize: 16,
-        color: Colors.white,
-      ),
+      style: TextStyleConstants.bmiDescription,
     );
   }
 }
@@ -117,10 +100,7 @@ class HeightValueText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       'Height: ${height.round()} cm',
-      style: const TextStyle(
-        fontSize: 18,
-        fontWeight: FontWeight.bold,
-      ),
+      style: TextStyleConstants.smallTitle,
     );
   }
 }
@@ -135,10 +115,7 @@ class WeightValueText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       '$weight kg',
-      style: const TextStyle(
-        fontSize: 18,
-        fontWeight: FontWeight.bold,
-      ),
+      style: TextStyleConstants.smallTitle,
     );
   }
 }
@@ -153,11 +130,7 @@ class BMIValueText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       bmi.toStringAsFixed(1),
-      style: const TextStyle(
-        fontSize: 56,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
-      ),
+      style: TextStyleConstants.bmiValue,
     );
   }
 }

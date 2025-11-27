@@ -4,6 +4,7 @@ import 'repeat_container.dart';
 import 'icon_widgets.dart';
 import 'text_widgets.dart';
 import 'bmi_calculator_callbacks.dart';
+import 'constants/spacing_constants.dart';
 
 /// Slider Input Card Widget
 /// Displays input controls for height and weight using sliders and steppers
@@ -51,7 +52,7 @@ class _SliderInputCardState extends State<SliderInputCard> {
             label: widget.heightValue.round().toString(), // Display value when sliding
             onChanged: widget.onHeightChanged, // Callback when value changes
           ),
-          const SizedBox(height: 20), // Spacing
+          const SizedBox(height: SpacingConstants.extraLarge), // Spacing
           // Weight stepper controls with gesture detection
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

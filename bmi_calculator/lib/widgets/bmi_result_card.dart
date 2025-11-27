@@ -4,6 +4,9 @@ import 'repeat_container.dart';
 import 'text_widgets.dart';
 import '../widgets/app_theme.dart';
 import 'bmi_category.dart';
+import 'constants/container_constants.dart';
+import 'constants/color_constants.dart';
+import 'constants/spacing_constants.dart';
 
 /// BMI Result Card Widget
 /// Displays the calculated BMI result with category and visualization
@@ -29,31 +32,25 @@ class BMIResultCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return RepeatContainer(
       color: color, // Use category color as background
-      borderRadius: BorderRadius.circular(20), // More rounded corners
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.15), // Darker shadow for emphasis
-          blurRadius: 15,
-          offset: const Offset(0, 5),
-        ),
-      ],
+      borderRadius: ContainerConstants.largeBorderRadius, // More rounded corners
+      boxShadow: ContainerConstants.emphasizedBoxShadow,
       child: Column(
         children: [
           // Result title
           const BMIResultHeaderText(),
-          const SizedBox(height: 15),
+          const SizedBox(height: SpacingConstants.large),
           // Large BMI value display
           BMIValueText(bmi: bmi),
-          const SizedBox(height: 10),
+          const SizedBox(height: SpacingConstants.medium),
           // BMI category display
           CategoryLabelText(category: category.displayName),
-          const SizedBox(height: 15),
+          const SizedBox(height: SpacingConstants.large),
           // Visual BMI scale representation
           Container(
-            height: 20,
+            height: ContainerConstants.bmiScaleHeight,
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.3), // Semi-transparent background
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: ContainerConstants.smallBorderRadius,
             ),
             child: Row(
               children: [
@@ -62,7 +59,7 @@ class BMIResultCard extends StatelessWidget {
                   flex: 185,
                   child: Container(
                     decoration: const BoxDecoration(
-                      color: Colors.blue,
+                      color: ColorConstants.underweightColor,
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(10),
                         bottomLeft: Radius.circular(10),
@@ -74,14 +71,14 @@ class BMIResultCard extends StatelessWidget {
                 Expanded(
                   flex: 650,
                   child: Container(
-                    color: Colors.green,
+                    color: ColorConstants.normalWeightColor,
                   ),
                 ),
                 // Overweight section (orange)
                 Expanded(
                   flex: 500,
                   child: Container(
-                    color: Colors.orange,
+                    color: ColorConstants.overweightColor,
                   ),
                 ),
                 // Obese section (red)
@@ -89,7 +86,7 @@ class BMIResultCard extends StatelessWidget {
                   flex: 700,
                   child: Container(
                     decoration: const BoxDecoration(
-                      color: Colors.red,
+                      color: ColorConstants.obeseColor,
                       borderRadius: BorderRadius.only(
                         topRight: Radius.circular(10),
                         bottomRight: Radius.circular(10),
@@ -100,7 +97,7 @@ class BMIResultCard extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: SpacingConstants.medium),
           // Labels for the BMI scale
           const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -111,7 +108,7 @@ class BMIResultCard extends StatelessWidget {
               ScaleLabelText(text: 'Obese'),
             ],
           ),
-          const SizedBox(height: 15),
+          const SizedBox(height: SpacingConstants.large),
           // Description based on BMI category
           CategoryDescriptionText(description: category.description),
         ],

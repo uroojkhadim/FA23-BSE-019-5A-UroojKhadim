@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'repeat_container.dart';
 import 'icon_widgets.dart';
 import 'bmi_calculator_callbacks.dart';
+import 'constants/spacing_constants.dart';
 
 /// Text Input Card Widget
 /// Displays input fields for height and weight using text fields
@@ -38,7 +39,7 @@ class TextInputCard extends StatelessWidget {
               _validateInput(value, 'height', context);
             },
           ),
-          const SizedBox(height: 20), // Spacing between fields
+          const SizedBox(height: SpacingConstants.extraLarge), // Spacing between fields
           // Weight input field with icon
           TextField(
             controller: weightController,

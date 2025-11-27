@@ -1,5 +1,6 @@
 // Import the Flutter material design library
 import 'package:flutter/material.dart';
+import 'constants/container_constants.dart';
 
 /// RepeatContainer class for consistent styled containers
 /// This widget provides a reusable container with consistent styling
@@ -29,8 +30,8 @@ class RepeatContainer extends StatelessWidget {
     required this.child,
     this.color,
     this.margin,
-    this.padding = const EdgeInsets.all(20),
-    this.borderRadius = const BorderRadius.all(Radius.circular(15)),
+    this.padding = ContainerConstants.defaultPadding,
+    this.borderRadius = ContainerConstants.defaultBorderRadius,
     this.boxShadow,
   }) : super(key: key);
 
@@ -40,16 +41,9 @@ class RepeatContainer extends StatelessWidget {
       margin: margin,
       padding: padding,
       decoration: BoxDecoration(
-        color: color ?? Colors.white, // Use provided color or default to white
+        color: color ?? ContainerConstants.defaultColor, // Use provided color or default to white
         borderRadius: borderRadius,
-        boxShadow: boxShadow ?? [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2), // Subtle shadow
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: const Offset(0, 3), // Shadow offset
-          ),
-        ],
+        boxShadow: boxShadow ?? ContainerConstants.defaultBoxShadow,
       ),
       child: child, // Display the child widget
     );

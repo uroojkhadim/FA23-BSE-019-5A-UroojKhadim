@@ -10,6 +10,7 @@ import 'widgets/text_widgets.dart';
 import 'widgets/input_method.dart';
 import 'widgets/bmi_category.dart';
 import 'widgets/bmi_calculator_callbacks.dart';
+import 'widgets/constants/spacing_constants.dart';
 
 // =============================================================================
 // MAIN APPLICATION
@@ -192,17 +193,17 @@ class _BMICalculatorState extends State<BMICalculator> {
       // Main content area with scrollable layout
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: SpacingConstants.defaultPadding,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // App title
               const AppTitleText(),
-              const SizedBox(height: 10),
+              const SizedBox(height: SpacingConstants.medium),
               // App description
               const AppDescriptionText(),
-              const SizedBox(height: 30),
+              const SizedBox(height: SpacingConstants.huge),
               
               // Input cards based on selected method using conditional renderer
               BMICalculatorCallbacks.createConditionalRenderer(
@@ -251,7 +252,7 @@ class _BMICalculatorState extends State<BMICalculator> {
                 ),
               )(),
               
-              const SizedBox(height: 30),
+              const SizedBox(height: SpacingConstants.huge),
               
               // Calculate button
               Center(
@@ -264,7 +265,7 @@ class _BMICalculatorState extends State<BMICalculator> {
                 ),
               ),
               
-              const SizedBox(height: 30),
+              const SizedBox(height: SpacingConstants.huge),
               
               // Display BMI result if calculated using conditional renderer
               BMICalculatorCallbacks.createConditionalRenderer(
