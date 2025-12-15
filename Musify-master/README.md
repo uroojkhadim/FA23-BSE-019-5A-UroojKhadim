@@ -2,8 +2,14 @@
 <img src="https://github.com/gokadzev/Musify/raw/master/repository_files/Musify-banner.png" width="100%">
 
 # Musify
+Video
+
 
 Unlock the full potential of music: Stream effortlessly with one app!
+
+
+https://github.com/user-attachments/assets/9edc4070-af62-4d47-8261-ad98db4ce795
+
 
 [![Stars](https://img.shields.io/github/stars/gokadzev/Musify?style=flat-square&color=D3BEAB)](https://github.com/gokadzev/Musify/stargazers)
 [![Forks](https://img.shields.io/github/forks/gokadzev/Musify?style=flat-square&color=D3BEAB)](https://github.com/gokadzev/Musify/fork)
