@@ -39,12 +39,12 @@ class AppTheme {
         borderSide: const BorderSide(color: Color(AppConstants.secondaryColorValue), width: 2),
       ),
     ),
-    cardTheme: const CardTheme(
+    cardTheme: CardThemeData(
       elevation: 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppConstants.borderRadius),
       ),
-    ).copyWith(),
+    ),
   );
 
   static ThemeData darkTheme = ThemeData(
@@ -84,7 +84,7 @@ class AppTheme {
         borderSide: const BorderSide(color: Color(AppConstants.secondaryColorValue), width: 2),
       ),
     ),
-    cardTheme: CardTheme(
+    cardTheme: CardThemeData(
       elevation: 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppConstants.borderRadius),
