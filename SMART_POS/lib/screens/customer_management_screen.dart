@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers\customer_provider.dart';
-import '../models\customer.dart';
-import '../utils\constants.dart';
+import '../providers/customer_provider.dart';
+import '../models/customer.dart';
+import '../utils/constants.dart';
 import 'add_customer_screen.dart';
 
 class CustomerManagementScreen extends StatefulWidget {

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers\product_provider.dart';
-import '../providers\pos_cart_provider.dart';
-import '../models\product.dart';
-import '../utils\constants.dart';
+import '../providers/product_provider.dart';
+import '../providers/pos_cart_provider.dart';
+import '../models/product.dart';
+import '../utils/constants.dart';
 import 'add_product_screen.dart';
 
 class PosScreen extends StatefulWidget {
@@ -149,7 +149,6 @@ class _PosScreenState extends State<PosScreen> {
                             return ListTile(
                               title: Text(item.productName),
                               subtitle: Text('Qty: ${item.quantity} x \$${item.unitPrice.toStringAsFixed(2)}'),
-                              trailing: Text('\$${item.total.toStringAsFixed(2)}'),
                               trailing: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
