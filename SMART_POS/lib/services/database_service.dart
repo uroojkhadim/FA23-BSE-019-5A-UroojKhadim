@@ -9,7 +9,7 @@ import '../models/user.dart';
 
 class DatabaseService {
   static Database? _database;
-  static const int _version = 1;
+  static const int _version = 2;
   static const String _dbName = 'smart_pos.db';
 
   Future<Database> get database async {
@@ -24,7 +24,69 @@ class DatabaseService {
       path,
       version: _version,
       onCreate: _onCreate,
+      onUpgrade: _onUpgrade,
     );
+  }
+  
+  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      // Add new tables for version 2
+      // Create accounts table for accounting
+      await db.execute('''
+        CREATE TABLE accounts(
+          id TEXT PRIMARY KEY,
+          name TEXT NOT NULL,
+          type TEXT NOT NULL,
+          balance REAL NOT NULL,
+          description TEXT
+        )
+      ''');
+      
+      // Create accounting_entries table for accounting
+      await db.execute('''
+        CREATE TABLE accounting_entries(
+          id TEXT PRIMARY KEY,
+          transactionId TEXT NOT NULL,
+          accountId TEXT NOT NULL,
+          accountName TEXT NOT NULL,
+          debit REAL NOT NULL,
+          credit REAL NOT NULL,
+          date TEXT NOT NULL,
+          description TEXT,
+          FOREIGN KEY (accountId) REFERENCES accounts (id)
+        )
+      ''');
+      
+      // Create inventory_transactions table for enhanced inventory
+      await db.execute('''
+        CREATE TABLE inventory_transactions(
+          id TEXT PRIMARY KEY,
+          productId TEXT NOT NULL,
+          productName TEXT NOT NULL,
+          transactionType TEXT NOT NULL,
+          quantity INTEGER NOT NULL,
+          unitCost REAL NOT NULL,
+          totalCost REAL NOT NULL,
+          date TEXT NOT NULL,
+          referenceId TEXT,
+          notes TEXT
+        )
+      ''');
+      
+      // Create product_variants table for enhanced inventory
+      await db.execute('''
+        CREATE TABLE product_variants(
+          id TEXT PRIMARY KEY,
+          productId TEXT NOT NULL,
+          variantName TEXT NOT NULL,
+          variantValue TEXT NOT NULL,
+          sku TEXT UNIQUE NOT NULL,
+          quantity INTEGER NOT NULL,
+          price REAL NOT NULL,
+          cost REAL NOT NULL
+        )
+      ''');
+    }
   }
 
   Future<void> _onCreate(Database db, int version) async {
@@ -104,6 +166,62 @@ class DatabaseService {
         total REAL NOT NULL,
         FOREIGN KEY (transactionId) REFERENCES transactions (transactionId),
         FOREIGN KEY (productId) REFERENCES products (id)
+      )
+    ''');
+    
+    // Create accounts table for accounting
+    await db.execute('''
+      CREATE TABLE accounts(
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        type TEXT NOT NULL,
+        balance REAL NOT NULL,
+        description TEXT
+      )
+    ''');
+    
+    // Create accounting_entries table for accounting
+    await db.execute('''
+      CREATE TABLE accounting_entries(
+        id TEXT PRIMARY KEY,
+        transactionId TEXT NOT NULL,
+        accountId TEXT NOT NULL,
+        accountName TEXT NOT NULL,
+        debit REAL NOT NULL,
+        credit REAL NOT NULL,
+        date TEXT NOT NULL,
+        description TEXT,
+        FOREIGN KEY (accountId) REFERENCES accounts (id)
+      )
+    ''');
+    
+    // Create inventory_transactions table for enhanced inventory
+    await db.execute('''
+      CREATE TABLE inventory_transactions(
+        id TEXT PRIMARY KEY,
+        productId TEXT NOT NULL,
+        productName TEXT NOT NULL,
+        transactionType TEXT NOT NULL,
+        quantity INTEGER NOT NULL,
+        unitCost REAL NOT NULL,
+        totalCost REAL NOT NULL,
+        date TEXT NOT NULL,
+        referenceId TEXT,
+        notes TEXT
+      )
+    ''');
+    
+    // Create product_variants table for enhanced inventory
+    await db.execute('''
+      CREATE TABLE product_variants(
+        id TEXT PRIMARY KEY,
+        productId TEXT NOT NULL,
+        variantName TEXT NOT NULL,
+        variantValue TEXT NOT NULL,
+        sku TEXT UNIQUE NOT NULL,
+        quantity INTEGER NOT NULL,
+        price REAL NOT NULL,
+        cost REAL NOT NULL
       )
     ''');
   }
@@ -300,6 +418,38 @@ class DatabaseService {
       where: 'id = ?',
       whereArgs: [id],
     );
+  }
+  
+  Future<bool> addToCustomerTotalPurchase(int customerId, double amount) async {
+    try {
+      final db = await database;
+      // Get current customer
+      final List<Map<String, dynamic>> maps = await db.query(
+        'customers',
+        where: 'id = ?',
+        whereArgs: [customerId],
+      );
+      
+      if (maps.isNotEmpty) {
+        final currentTotal = (maps.first['totalPurchase'] as num?)?.toDouble() ?? 0.0;
+        final newTotal = currentTotal + amount;
+        
+        // Update customer with new total
+        await db.update(
+          'customers',
+          {'totalPurchase': newTotal},
+          where: 'id = ?',
+          whereArgs: [customerId],
+        );
+        
+        return true;
+      }
+      
+      return false;
+    } catch (e) {
+      print('Error adding to customer total purchase: $e');
+      return false;
+    }
   }
 
   // Transaction operations

@@ -5,6 +5,7 @@ import 'providers/sync_provider.dart';
 import 'providers/product_provider.dart';
 import 'providers/pos_cart_provider.dart';
 import 'providers/customer_provider.dart';
+import 'providers/analytics_provider.dart';
 import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
 import 'utils/theme.dart';
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ProductProvider()),
         ChangeNotifierProvider(create: (_) => PosCartProvider()),
         ChangeNotifierProvider(create: (_) => CustomerProvider()),
+        ChangeNotifierProvider(create: (_) => AnalyticsProvider()),
       ],
       child: Consumer<AuthProvider>(
         builder: (context, authProvider, child) {

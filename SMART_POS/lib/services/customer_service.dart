@@ -10,7 +10,8 @@ class CustomerService {
   }
 
   // Get a customer by ID
-  Future<Customer?> getCustomer(int id) async {
+  Future<Customer?> getCustomer(int? id) async {
+    if (id == null) return null;
     return await _databaseService.getCustomer(id);
   }
 
@@ -26,16 +27,19 @@ class CustomerService {
 
   // Update a customer
   Future<int> updateCustomer(Customer customer) async {
+    if (customer.id == null) return 0;
     return await _databaseService.updateCustomer(customer);
   }
 
   // Delete a customer
-  Future<int> deleteCustomer(int id) async {
+  Future<int> deleteCustomer(int? id) async {
+    if (id == null) return 0;
     return await _databaseService.deleteCustomer(id);
   }
 
   // Update customer's total purchase amount
-  Future<bool> updateCustomerTotalPurchase(int customerId, double newTotal) async {
+  Future<bool> updateCustomerTotalPurchase(int? customerId, double newTotal) async {
+    if (customerId == null) return false;
     try {
       Customer? customer = await _databaseService.getCustomer(customerId);
       if (customer != null) {
@@ -54,7 +58,8 @@ class CustomerService {
   }
 
   // Add to customer's total purchase amount
-  Future<bool> addToCustomerTotalPurchase(int customerId, double amount) async {
+  Future<bool> addToCustomerTotalPurchase(int? customerId, double amount) async {
+    if (customerId == null) return false;
     try {
       Customer? customer = await _databaseService.getCustomer(customerId);
       if (customer != null) {

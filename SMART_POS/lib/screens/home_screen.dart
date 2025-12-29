@@ -6,9 +6,11 @@ import 'login_screen.dart';
 import 'product_management_screen.dart';
 import 'pos_screen.dart';
 import 'customer_management_screen.dart';
+import 'enhanced_customer_management_screen.dart';
 import 'reports_screen.dart';
 import 'backup_screen.dart';
 import 'settings_screen.dart';
+import 'analytics_dashboard_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -99,7 +101,19 @@ class HomeScreen extends StatelessWidget {
                   onTap: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const CustomerManagementScreen(),
+                      builder: (context) => const EnhancedCustomerManagementScreen(),
+                    ),
+                  ),
+                ),
+                _buildHomeCard(
+                  context,
+                  title: 'Analytics',
+                  icon: Icons.analytics,
+                  color: Colors.red,
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AnalyticsDashboardScreen(),
                     ),
                   ),
                 ),

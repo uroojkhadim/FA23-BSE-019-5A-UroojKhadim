@@ -68,7 +68,8 @@ class CustomerProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> deleteCustomer(int customerId) async {
+  Future<bool> deleteCustomer(int? customerId) async {
+    if (customerId == null) return false;
     _isLoading = true;
     notifyListeners();
 

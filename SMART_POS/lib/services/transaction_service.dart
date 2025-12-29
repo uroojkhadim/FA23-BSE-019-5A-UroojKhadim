@@ -1,17 +1,97 @@
+import 'package:sqflite/sqflite.dart' hide Transaction;
 import '../models/transaction.dart';
 import '../models/transaction_item.dart';
+import '../models/accounting.dart';
 import 'database_service.dart';
+import 'accounting_service.dart';
 
 class TransactionService {
   final DatabaseService _databaseService = DatabaseService();
+  final AccountingService _accountingService = AccountingService();
 
   // Add a new transaction
   Future<String> addTransaction(Transaction transaction) async {
     int result = await _databaseService.insertTransaction(transaction);
     if (result != 0) {
+      // Create accounting entries for the transaction
+      await _createAccountingEntries(transaction);
+      
+      // Update customer's total purchase if customer exists
+      if (transaction.customerId != null) {
+        await _updateCustomerTotalPurchase(transaction.customerId!, transaction.total);
+      }
+      
       return transaction.transactionId;
     }
     return '';
+  }
+  
+  // Update customer's total purchase
+  Future<void> _updateCustomerTotalPurchase(int customerId, double amount) async {
+    try {
+      await _databaseService.addToCustomerTotalPurchase(customerId, amount);
+    } catch (e) {
+      print('Error updating customer total purchase: $e');
+    }
+  }
+  
+  // Create accounting entries for a transaction
+  Future<void> _createAccountingEntries(Transaction transaction) async {
+    // Create revenue account entry
+    final revenueEntry = AccountingEntry(
+      id: 'revenue_${transaction.transactionId}',
+      transactionId: transaction.transactionId,
+      accountId: 'revenue',
+      accountName: 'Revenue',
+      debit: 0.0,
+      credit: transaction.total,
+      date: transaction.transactionDate,
+      description: 'Revenue from transaction ${transaction.transactionId}',
+    );
+    await _accountingService.insertAccountingEntry(revenueEntry);
+    
+    // Create cash/credit account entry
+    final cashEntry = AccountingEntry(
+      id: 'cash_${transaction.transactionId}',
+      transactionId: transaction.transactionId,
+      accountId: transaction.paymentMethod.toLowerCase(),
+      accountName: '${transaction.paymentMethod} Account',
+      debit: transaction.total,
+      credit: 0.0,
+      date: transaction.transactionDate,
+      description: 'Cash received from transaction ${transaction.transactionId}',
+    );
+    await _accountingService.insertAccountingEntry(cashEntry);
+    
+    // Create tax liability account entry
+    if (transaction.tax > 0) {
+      final taxEntry = AccountingEntry(
+        id: 'tax_${transaction.transactionId}',
+        transactionId: transaction.transactionId,
+        accountId: 'tax_liability',
+        accountName: 'Tax Liability',
+        debit: 0.0,
+        credit: transaction.tax,
+        date: transaction.transactionDate,
+        description: 'Tax liability from transaction ${transaction.transactionId}',
+      );
+      await _accountingService.insertAccountingEntry(taxEntry);
+    }
+    
+    // Create discount expense account entry
+    if (transaction.discount > 0) {
+      final discountEntry = AccountingEntry(
+        id: 'discount_${transaction.transactionId}',
+        transactionId: transaction.transactionId,
+        accountId: 'discount_expense',
+        accountName: 'Discount Expense',
+        debit: transaction.discount,
+        credit: 0.0,
+        date: transaction.transactionDate,
+        description: 'Discount expense from transaction ${transaction.transactionId}',
+      );
+      await _accountingService.insertAccountingEntry(discountEntry);
+    }
   }
 
   // Get a transaction by ID

@@ -18,6 +18,14 @@ android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_17.toString()
     }
+    
+    configurations.all {
+        resolutionStrategy {
+            force("androidx.core:core:1.13.1")
+            force("androidx.core:core-ktx:1.13.1")
+            exclude(group = "com.android.support", module = "support-compat")
+        }
+    }
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
@@ -38,11 +46,11 @@ android {
         }
     }
     
-    packagingOptions {
-        pickFirst("**/libc++_shared.so")
-        pickFirst("**/libjsc.so")
+    packaging {
         resources {
-            excludes += ["META-INF/**"]
+            pickFirsts += setOf("**/libc++_shared.so")
+            pickFirsts += setOf("**/libjsc.so")
+            excludes += setOf("META-INF/**")
         }
     }
 }

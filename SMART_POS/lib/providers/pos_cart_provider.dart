@@ -2,11 +2,14 @@ import 'package:flutter/foundation.dart';
 import '../models/product.dart';
 import '../models/transaction.dart';
 import '../models/transaction_item.dart';
+import '../models/inventory.dart';
 import '../services/transaction_service.dart';
+import '../services/inventory_service.dart';
 import '../utils/constants.dart';
 
 class PosCartProvider with ChangeNotifier {
   final TransactionService _transactionService = TransactionService();
+  final InventoryService _inventoryService = InventoryService();
   List<TransactionItem> _cartItems = [];
   double _subTotal = 0.0;
   double _tax = 0.0;
@@ -155,6 +158,21 @@ class PosCartProvider with ChangeNotifier {
             transactionId: transactionId,
           );
           await _transactionService.addTransactionItem(updatedItem);
+          
+          // Create inventory transaction to reduce stock
+          final inventoryTransaction = InventoryTransaction(
+            id: 'inv_${transactionId}_${item.productId}',
+            productId: item.productId.toString(),
+            productName: item.productName,
+            transactionType: 'out',
+            quantity: item.quantity,
+            unitCost: item.unitPrice,
+            totalCost: item.total,
+            date: DateTime.now(),
+            referenceId: transactionId,
+            notes: 'POS sale transaction',
+          );
+          await _inventoryService.insertInventoryTransaction(inventoryTransaction);
         }
         
         // Clear cart after successful transaction
