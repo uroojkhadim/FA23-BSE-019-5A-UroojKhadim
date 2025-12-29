@@ -37,6 +37,14 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
+    
+    packagingOptions {
+        pickFirst("**/libc++_shared.so")
+        pickFirst("**/libjsc.so")
+        resources {
+            excludes += ["META-INF/**"]
+        }
+    }
 }
 
 flutter {
