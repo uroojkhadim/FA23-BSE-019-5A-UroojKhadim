@@ -23,6 +23,15 @@ class _PosScreenState extends State<PosScreen> {
       appBar: AppBar(
         title: const Text('POS System'),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.shopping_cart),
+            onPressed: () {
+              // Show cart details
+              _showCartDetails(context);
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -31,10 +40,12 @@ class _PosScreenState extends State<PosScreen> {
             padding: const EdgeInsets.all(AppConstants.paddingMedium),
             child: TextField(
               controller: _searchController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 hintText: 'Search products...',
-                prefixIcon: Icon(Icons.search),
+                prefixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(),
+                filled: true,
+                fillColor: Colors.grey[50],
               ),
               onChanged: (value) {
                 setState(() {
@@ -230,6 +241,87 @@ class _PosScreenState extends State<PosScreen> {
         ),
       );
     }
+  }
+  
+  void _showCartDetails(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return DraggableScrollableSheet(
+          initialChildSize: 0.7,
+          minChildSize: 0.3,
+          maxChildSize: 0.9,
+          builder: (context, scrollController) {
+            return Consumer<PosCartProvider>(
+              builder: (context, cartProvider, child) {
+                if (cartProvider.cartItems.isEmpty) {
+                  return const Center(
+                    child: Text('Cart is empty'),
+                  );
+                }
+                
+                return Column(
+                  children: [
+                    Container(
+                      width: 40,
+                      height: 4,
+                      margin: const EdgeInsets.symmetric(vertical: 8),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Cart Items',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            'Total: ₹${cartProvider.total.toStringAsFixed(2)}',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: ListView.builder(
+                        controller: scrollController,
+                        itemCount: cartProvider.cartItems.length,
+                        itemBuilder: (context, index) {
+                          var item = cartProvider.cartItems[index];
+                          return Card(
+                            margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+                            child: ListTile(
+                              title: Text(item.productName),
+                              subtitle: Text('₹${item.unitPrice.toStringAsFixed(2)} x ${item.quantity}'),
+                              trailing: Text('₹${item.total.toStringAsFixed(2)}'),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+        );
+      },
+    );
   }
 
   void _processPayment(BuildContext context, PosCartProvider cartProvider) {

@@ -11,12 +11,31 @@ class AppTheme {
     appBarTheme: const AppBarTheme(
       backgroundColor: Color(AppConstants.primaryColorValue),
       foregroundColor: Colors.white,
-      elevation: 0,
+      elevation: 4,
+      titleTextStyle: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+      ),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: Color(AppConstants.primaryColorValue),
         foregroundColor: Colors.white,
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppConstants.paddingMedium,
+          vertical: AppConstants.buttonHeight / 2,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppConstants.borderRadius),
+        ),
+        elevation: 2,
+      ),
+    ),
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+        foregroundColor: Color(AppConstants.primaryColorValue),
+        side: const BorderSide(color: Color(AppConstants.primaryColorValue)),
         padding: const EdgeInsets.symmetric(
           horizontal: AppConstants.paddingMedium,
           vertical: AppConstants.buttonHeight / 2,
@@ -38,11 +57,40 @@ class AppTheme {
         borderRadius: BorderRadius.circular(AppConstants.borderRadius),
         borderSide: const BorderSide(color: Color(AppConstants.secondaryColorValue), width: 2),
       ),
+      filled: true,
+      fillColor: Colors.white,
     ),
     cardTheme: CardThemeData(
-      elevation: 2,
+      elevation: 4,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppConstants.borderRadius),
+        borderRadius: BorderRadius.circular(16.0),
+        side: const BorderSide(color: Color(0xFFE0E0E0)),
+      ),
+      margin: const EdgeInsets.all(8.0),
+    ),
+    textTheme: const TextTheme(
+      headlineSmall: TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.bold,
+        color: Color(0xFF333333),
+      ),
+      titleLarge: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.w600,
+        color: Color(0xFF333333),
+      ),
+      titleMedium: TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
+        color: Color(0xFF333333),
+      ),
+      bodyLarge: TextStyle(
+        fontSize: 16,
+        color: Color(0xFF333333),
+      ),
+      bodyMedium: TextStyle(
+        fontSize: 14,
+        color: Color(0xFF666666),
       ),
     ),
   );
@@ -56,12 +104,31 @@ class AppTheme {
     appBarTheme: const AppBarTheme(
       backgroundColor: Color(AppConstants.primaryColorValue),
       foregroundColor: Colors.white,
-      elevation: 0,
+      elevation: 4,
+      titleTextStyle: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+      ),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: Color(AppConstants.primaryColorValue),
         foregroundColor: Colors.white,
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppConstants.paddingMedium,
+          vertical: AppConstants.buttonHeight / 2,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppConstants.borderRadius),
+        ),
+        elevation: 2,
+      ),
+    ),
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+        foregroundColor: Color(AppConstants.primaryColorValue),
+        side: const BorderSide(color: Color(AppConstants.primaryColorValue)),
         padding: const EdgeInsets.symmetric(
           horizontal: AppConstants.paddingMedium,
           vertical: AppConstants.buttonHeight / 2,
@@ -83,11 +150,40 @@ class AppTheme {
         borderRadius: BorderRadius.circular(AppConstants.borderRadius),
         borderSide: const BorderSide(color: Color(AppConstants.secondaryColorValue), width: 2),
       ),
+      filled: true,
+      fillColor: Color(0xFF333333),
     ),
     cardTheme: CardThemeData(
-      elevation: 2,
+      elevation: 4,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppConstants.borderRadius),
+        borderRadius: BorderRadius.circular(16.0),
+        side: const BorderSide(color: Color(0xFF555555)),
+      ),
+      margin: const EdgeInsets.all(8.0),
+    ),
+    textTheme: const TextTheme(
+      headlineSmall: TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+      ),
+      titleLarge: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.w600,
+        color: Colors.white,
+      ),
+      titleMedium: TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
+        color: Colors.white,
+      ),
+      bodyLarge: TextStyle(
+        fontSize: 16,
+        color: Colors.white,
+      ),
+      bodyMedium: TextStyle(
+        fontSize: 14,
+        color: Color(0xFFCCCCCC),
       ),
     ),
   );

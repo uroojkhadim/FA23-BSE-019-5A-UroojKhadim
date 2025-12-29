@@ -234,34 +234,95 @@ class _EnhancedCustomerManagementScreenState extends State<EnhancedCustomerManag
                         final customer = filteredCustomers[index];
                         return Card(
                           margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
-                          child: ListTile(
-                            title: Text(customer.name),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                if (customer.email != null && customer.email!.isNotEmpty)
-                                  Text('Email: ${customer.email!}'),
-                                if (customer.phone != null && customer.phone!.isNotEmpty)
-                                  Text('Phone: ${customer.phone!}'),
-                                Text('Total Purchase: ₹${customer.totalPurchase.toStringAsFixed(2)}'),
-                              ],
-                            ),
-                            trailing: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                IconButton(
-                                  icon: const Icon(Icons.edit, color: Colors.blue),
-                                  onPressed: () => _startEditing(customer),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ListTile(
+                              leading: Container(
+                                width: 50,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).primaryColor.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(25),
                                 ),
-                                IconButton(
-                                  icon: const Icon(Icons.delete, color: Colors.red),
-                                  onPressed: () {
-                                    if (customer.id != null) {
-                                      _deleteCustomer(customer.id!);
-                                    }
-                                  },
+                                child: const Icon(
+                                  Icons.person,
+                                  color: Colors.grey,
                                 ),
-                              ],
+                              ),
+                              title: Text(
+                                customer.name,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 4),
+                                  if (customer.email != null && customer.email!.isNotEmpty)
+                                    Text('Email: ${customer.email!}'),
+                                  if (customer.phone != null && customer.phone!.isNotEmpty)
+                                    Text('Phone: ${customer.phone!}'),
+                                  const SizedBox(height: 4),
+                                  Row(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                        decoration: BoxDecoration(
+                                          color: Colors.green.withOpacity(0.1),
+                                          borderRadius: BorderRadius.circular(8),
+                                          border: Border.all(
+                                            color: Colors.green,
+                                            width: 1,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          'Total: ₹${customer.totalPurchase.toStringAsFixed(2)}',
+                                          style: const TextStyle(
+                                            color: Colors.green,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.blue.withOpacity(0.1),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: IconButton(
+                                      icon: const Icon(Icons.edit, color: Colors.blue),
+                                      onPressed: () => _startEditing(customer),
+                                      padding: EdgeInsets.zero,
+                                      constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.red.withOpacity(0.1),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: IconButton(
+                                      icon: const Icon(Icons.delete, color: Colors.red),
+                                      onPressed: () {
+                                        if (customer.id != null) {
+                                          _deleteCustomer(customer.id!);
+                                        }
+                                      },
+                                      padding: EdgeInsets.zero,
+                                      constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         );
@@ -278,62 +339,98 @@ class _EnhancedCustomerManagementScreenState extends State<EnhancedCustomerManag
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              _editingCustomer != null ? 'Edit Customer' : 'Add New Customer',
-              style: const TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-              ),
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8.0),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  child: Icon(
+                    _editingCustomer != null ? Icons.edit : Icons.person_add,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                ),
+                const SizedBox(width: 12.0),
+                Text(
+                  _editingCustomer != null ? 'Edit Customer' : 'Add New Customer',
+                  style: const TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 16.0),
+            const SizedBox(height: 20.0),
             TextField(
               controller: _nameController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Name *',
-                border: OutlineInputBorder(),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                filled: true,
+                fillColor: Colors.grey[50],
               ),
             ),
             const SizedBox(height: 16.0),
             TextField(
               controller: _emailController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Email',
-                border: OutlineInputBorder(),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                filled: true,
+                fillColor: Colors.grey[50],
               ),
               keyboardType: TextInputType.emailAddress,
             ),
             const SizedBox(height: 16.0),
             TextField(
               controller: _phoneController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Phone',
-                border: OutlineInputBorder(),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                filled: true,
+                fillColor: Colors.grey[50],
               ),
               keyboardType: TextInputType.phone,
             ),
             const SizedBox(height: 16.0),
             TextField(
               controller: _addressController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Address',
-                border: OutlineInputBorder(),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                filled: true,
+                fillColor: Colors.grey[50],
               ),
               maxLines: 3,
             ),
             const SizedBox(height: 16.0),
             TextField(
               controller: _totalPurchaseController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Total Purchase',
-                border: OutlineInputBorder(),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                filled: true,
+                fillColor: Colors.grey[50],
               ),
               keyboardType: const TextInputType.numberWithOptions(decimal: true),
             ),
-            const SizedBox(height: 16.0),
+            const SizedBox(height: 20.0),
             Row(
               children: [
                 Expanded(
@@ -344,7 +441,7 @@ class _EnhancedCustomerManagementScreenState extends State<EnhancedCustomerManag
                         : Text(_editingCustomer != null ? 'Update' : 'Add'),
                   ),
                 ),
-                const SizedBox(width: 8.0),
+                const SizedBox(width: 12.0),
                 Expanded(
                   child: OutlinedButton(
                     onPressed: _isLoading

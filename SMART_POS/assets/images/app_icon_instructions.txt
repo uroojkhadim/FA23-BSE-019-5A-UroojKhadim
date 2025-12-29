@@ -1,0 +1,46 @@
+# App Icon Creation Instructions
+
+To create a custom app icon for your SMART POS application:
+
+## Option 1: AI-Generated Icon Services
+1. Use an AI image generator like:
+   - Canva
+   - Figma
+   - Midjourney
+   - DALL-E
+   - Stable Diffusion
+
+2. Describe your icon as:
+   - "Professional point of sale app icon with shopping cart, barcode scanner, or cash register elements"
+   - "Modern business POS system icon with clean, minimalist design"
+   - "E-commerce POS app icon with blue/purple color scheme matching your app theme"
+
+## Option 2: Design Specifications
+Create an icon with these specifications:
+- Size: 1024x1024 pixels (minimum)
+- Format: PNG or JPEG
+- Background: Preferably transparent or solid color
+- Style: Material Design guidelines compliant
+- Content: Include POS-related elements like shopping cart, barcode, cash register, or business symbols
+
+## Recommended Design Elements:
+- Shopping cart or basket
+- Barcode scanner
+- Cash register
+- Money/financial symbols
+- Business chart/graph
+- Your brand colors (purple/blue theme from your app)
+
+## After Creating Your Icon:
+1. Save the icon as "app_icon.png" in this directory
+2. Run the following command in your project root:
+   flutter pub get
+   flutter pub run flutter_launcher_icons:main
+3. Your app icons will be generated automatically
+
+## Color Suggestions:
+- Primary: #673AB7 (Deep Purple)
+- Secondary: #9C27B0 (Purple)
+- Accent: #FF9800 (Orange) or #4CAF50 (Green)
+
+This will replace the default Flutter launcher icon with your custom SMART POS icon.

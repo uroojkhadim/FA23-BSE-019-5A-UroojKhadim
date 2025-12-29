@@ -24,85 +24,212 @@ class _SettingsScreenState extends State<SettingsScreen> {
             children: [
               // User profile section
               Card(
+                elevation: 3,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.0),
+                ),
                 child: Padding(
-                  padding: const EdgeInsets.all(AppConstants.paddingMedium),
+                  padding: const EdgeInsets.all(20.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Profile',
-                        style: TextStyle(
-                          fontSize: AppConstants.fontSizeLarge,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(8.0),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).primaryColor.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                            child: const Icon(
+                              Icons.person,
+                              color: Colors.grey,
+                            ),
+                          ),
+                          const SizedBox(width: 12.0),
+                          const Text(
+                            'Profile',
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: AppConstants.paddingMedium),
+                      const SizedBox(height: 16.0),
                       ListTile(
-                        leading: const Icon(Icons.person),
-                        title: Text(authProvider.currentUser?.name ?? 'Guest'),
-                        subtitle: Text(authProvider.currentUser?.email ?? ''),
-                        trailing: const Icon(Icons.arrow_forward_ios),
+                        leading: Container(
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).primaryColor.withOpacity(0.1),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.person,
+                            color: Colors.grey,
+                            size: 24,
+                          ),
+                        ),
+                        title: Text(
+                          authProvider.currentUser?.name ?? 'Guest',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                        subtitle: Text(
+                          authProvider.currentUser?.email ?? '',
+                          style: const TextStyle(
+                            fontSize: 14,
+                          ),
+                        ),
+                        trailing: const Icon(
+                          Icons.arrow_forward_ios,
+                          size: 16,
+                        ),
                         onTap: () => _showProfileDialog(context),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0),
                       ),
                     ],
                   ),
                 ),
               ),
               
-              const SizedBox(height: AppConstants.paddingSmall),
+              const SizedBox(height: 12.0),
               
               // Business settings
               Card(
+                elevation: 3,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.0),
+                ),
                 child: Padding(
-                  padding: const EdgeInsets.all(AppConstants.paddingMedium),
+                  padding: const EdgeInsets.all(20.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Business Settings',
-                        style: TextStyle(
-                          fontSize: AppConstants.fontSizeLarge,
-                          fontWeight: FontWeight.bold,
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(8.0),
+                            decoration: BoxDecoration(
+                              color: Colors.orange.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                            child: const Icon(
+                              Icons.store,
+                              color: Colors.orange,
+                            ),
+                          ),
+                          const SizedBox(width: 12.0),
+                          const Text(
+                            'Business Settings',
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16.0),
+                      ListTile(
+                        leading: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: Colors.orange.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const Icon(
+                            Icons.store,
+                            color: Colors.orange,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: AppConstants.paddingMedium),
-                      ListTile(
-                        leading: const Icon(Icons.store),
-                        title: const Text('Business Name'),
+                        title: const Text(
+                          'Business Name',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
                         subtitle: const Text('Set your business name'),
-                        trailing: const Icon(Icons.arrow_forward_ios),
+                        trailing: const Icon(
+                          Icons.arrow_forward_ios,
+                          size: 16,
+                        ),
                         onTap: () => _showBusinessNameDialog(context),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0),
                       ),
-                      const Divider(),
+                      const Divider(height: 1),
                       ListTile(
-                        leading: const Icon(Icons.receipt),
-                        title: const Text('Tax Rate'),
+                        leading: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: Colors.green.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const Icon(
+                            Icons.receipt,
+                            color: Colors.green,
+                          ),
+                        ),
+                        title: const Text(
+                          'Tax Rate',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
                         subtitle: const Text('Set default tax rate'),
-                        trailing: const Icon(Icons.arrow_forward_ios),
+                        trailing: const Icon(
+                          Icons.arrow_forward_ios,
+                          size: 16,
+                        ),
                         onTap: () => _showTaxRateDialog(context),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0),
                       ),
                     ],
                   ),
                 ),
               ),
               
-              const SizedBox(height: AppConstants.paddingSmall),
+              const SizedBox(height: 12.0),
               
               // Sync settings
               Card(
+                elevation: 3,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.0),
+                ),
                 child: Padding(
-                  padding: const EdgeInsets.all(AppConstants.paddingMedium),
+                  padding: const EdgeInsets.all(20.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Sync Settings',
-                        style: TextStyle(
-                          fontSize: AppConstants.fontSizeLarge,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(8.0),
+                            decoration: BoxDecoration(
+                              color: Colors.blue.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                            child: const Icon(
+                              Icons.sync,
+                              color: Colors.blue,
+                            ),
+                          ),
+                          const SizedBox(width: 12.0),
+                          const Text(
+                            'Sync Settings',
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: AppConstants.paddingMedium),
+                      const SizedBox(height: 16.0),
                       SwitchListTile(
                         title: const Text('Auto Sync'),
                         subtitle: const Text('Automatically sync when online'),
@@ -111,41 +238,98 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           // Handle auto sync toggle
                         },
                       ),
-                      const Divider(),
+                      const Divider(height: 1),
                       ListTile(
-                        leading: const Icon(Icons.sync),
-                        title: const Text('Sync Now'),
+                        leading: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: Colors.blue.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const Icon(
+                            Icons.sync,
+                            color: Colors.blue,
+                          ),
+                        ),
+                        title: const Text(
+                          'Sync Now',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
                         subtitle: const Text('Manually sync data'),
                         onTap: () => _syncNow(context),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0),
                       ),
                     ],
                   ),
                 ),
               ),
               
-              const SizedBox(height: AppConstants.paddingSmall),
+              const SizedBox(height: 12.0),
               
               // Security
               Card(
+                elevation: 3,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.0),
+                ),
                 child: Padding(
-                  padding: const EdgeInsets.all(AppConstants.paddingMedium),
+                  padding: const EdgeInsets.all(20.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Security',
-                        style: TextStyle(
-                          fontSize: AppConstants.fontSizeLarge,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(8.0),
+                            decoration: BoxDecoration(
+                              color: Colors.red.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                            child: const Icon(
+                              Icons.lock,
+                              color: Colors.red,
+                            ),
+                          ),
+                          const SizedBox(width: 12.0),
+                          const Text(
+                            'Security',
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: AppConstants.paddingMedium),
+                      const SizedBox(height: 16.0),
                       ListTile(
-                        leading: const Icon(Icons.lock),
-                        title: const Text('Change Password'),
+                        leading: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: Colors.red.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const Icon(
+                            Icons.lock,
+                            color: Colors.red,
+                          ),
+                        ),
+                        title: const Text(
+                          'Change Password',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
                         subtitle: const Text('Update your account password'),
-                        trailing: const Icon(Icons.arrow_forward_ios),
+                        trailing: const Icon(
+                          Icons.arrow_forward_ios,
+                          size: 16,
+                        ),
                         onTap: () => _showChangePasswordDialog(context),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0),
                       ),
                     ],
                   ),

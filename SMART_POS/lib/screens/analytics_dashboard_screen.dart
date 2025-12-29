@@ -199,33 +199,45 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
 
   Widget _buildSummaryCard(String title, String value, IconData icon, Color color) {
     return Expanded(
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 4.0),
-        padding: const EdgeInsets.all(12.0),
-        decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(8.0),
+      child: Card(
+        elevation: 3,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.0),
         ),
-        child: Column(
-          children: [
-            Icon(icon, color: color, size: 28.0),
-            const SizedBox(height: 8.0),
-            Text(
-              value,
-              style: const TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
+        child: Container(
+          margin: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12.0),
+                decoration: BoxDecoration(
+                  color: color.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                child: Icon(icon, color: color, size: 28.0),
               ),
-            ),
-            const SizedBox(height: 4.0),
-            Text(
-              title,
-              style: TextStyle(
-                color: Colors.grey[600],
-                fontSize: 12.0,
+              const SizedBox(height: 12.0),
+              Text(
+                value,
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                  color: color,
+                ),
               ),
-            ),
-          ],
+              const SizedBox(height: 4.0),
+              Text(
+                title,
+                style: TextStyle(
+                  color: Colors.grey[600],
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -258,7 +270,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
             ),
             const SizedBox(height: 16.0),
             SizedBox(
-              height: 200.0,
+              height: 250.0,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: dailySales.length,
@@ -267,16 +279,23 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
                   final date = DateTime.parse(data['date']);
                   final dailyTotal = (data['dailyTotal'] as num?)?.toDouble() ?? 0.0;
                   
+                  // Find max value for scaling
+                  double maxValue = 0;
+                  for (var item in dailySales) {
+                    final value = (item['dailyTotal'] as num?)?.toDouble() ?? 0.0;
+                    if (value > maxValue) maxValue = value;
+                  }
+                  
                   return Container(
                     width: 60.0,
-                    margin: const EdgeInsets.symmetric(horizontal: 4.0),
+                    margin: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: Column(
                       children: [
                         Expanded(
                           child: Container(
                             decoration: BoxDecoration(
-                              color: Theme.of(context).primaryColor.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(4.0),
+                              color: Colors.grey[100],
+                              borderRadius: BorderRadius.circular(8.0),
                             ),
                             child: Stack(
                               children: [
@@ -285,10 +304,17 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
                                   left: 0,
                                   right: 0,
                                   child: Container(
-                                    height: (dailyTotal / 1000.0) * 150, // Scale based on max value
+                                    height: maxValue > 0 ? (dailyTotal / maxValue) * 180 : 0, // Scale based on max value
                                     decoration: BoxDecoration(
-                                      color: Theme.of(context).primaryColor,
-                                      borderRadius: BorderRadius.circular(4.0),
+                                      gradient: LinearGradient(
+                                        begin: Alignment.bottomCenter,
+                                        end: Alignment.topCenter,
+                                        colors: [
+                                          Theme.of(context).primaryColor,
+                                          Theme.of(context).primaryColor.withOpacity(0.6),
+                                        ],
+                                      ),
+                                      borderRadius: BorderRadius.vertical(top: Radius.circular(8.0)),
                                     ),
                                   ),
                                 ),
@@ -299,7 +325,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
                         const SizedBox(height: 8.0),
                         Text(
                           '${date.day}/${date.month}',
-                          style: const TextStyle(fontSize: 10.0),
+                          style: const TextStyle(fontSize: 10.0, fontWeight: FontWeight.w500),
                         ),
                       ],
                     ),

@@ -41,10 +41,14 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
             padding: const EdgeInsets.all(AppConstants.paddingMedium),
             child: TextField(
               controller: _searchController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 hintText: 'Search products...',
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(),
+                prefixIcon: const Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                filled: true,
+                fillColor: Colors.grey[50],
               ),
               onChanged: (value) {
                 setState(() {
@@ -79,27 +83,91 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
                         horizontal: AppConstants.paddingMedium,
                         vertical: AppConstants.paddingSmall,
                       ),
-                      child: ListTile(
-                        title: Text(product.name),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('SKU: ${product.sku}'),
-                            Text('Price: \$${product.price.toStringAsFixed(2)}'),
-                            Text('Quantity: ${product.quantity}'),
-                            Text('Category: ${product.category}'),
-                          ],
-                        ),
-                        trailing: Text(
-                          '\$${product.price.toStringAsFixed(2)}',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: AppConstants.fontSizeMedium,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ListTile(
+                          leading: Container(
+                            width: 50,
+                            height: 50,
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).primaryColor.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: const Icon(
+                              Icons.inventory,
+                              color: Colors.grey,
+                            ),
                           ),
+                          title: Text(
+                            product.name,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 4),
+                              Text('SKU: ${product.sku}'),
+                              Text('Category: ${product.category}'),
+                              const SizedBox(height: 4),
+                              Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                    decoration: BoxDecoration(
+                                      color: product.quantity < 5 ? Colors.red.withOpacity(0.1) : Colors.green.withOpacity(0.1),
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(
+                                        color: product.quantity < 5 ? Colors.red : Colors.green,
+                                        width: 1,
+                                      ),
+                                    ),
+                                    child: Text(
+                                      'Qty: ${product.quantity}',
+                                      style: TextStyle(
+                                        color: product.quantity < 5 ? Colors.red : Colors.green,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    'Price: \$${product.price.toStringAsFixed(2)}',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          trailing: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                '\$${product.price.toStringAsFixed(2)}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  color: Colors.green,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              if (product.quantity < 5)
+                                const Icon(
+                                  Icons.warning_amber_rounded,
+                                  color: Colors.red,
+                                  size: 16,
+                                ),
+                            ],
+                          ),
+                          onTap: () {
+                            _showProductDetails(context, product);
+                          },
                         ),
-                        onTap: () {
-                          _showProductDetails(context, product);
-                        },
                       ),
                     );
                   },
