@@ -3,8 +3,6 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import '../models/product.dart';
 import '../models/customer.dart';
 import '../models/transaction.dart';
-import '../models/transaction_item.dart';
-import '../models/user.dart';
 import 'database_service.dart';
 
 class SyncService {

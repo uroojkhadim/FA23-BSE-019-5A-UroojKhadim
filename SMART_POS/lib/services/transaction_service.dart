@@ -1,4 +1,3 @@
-import 'package:sqflite/sqflite.dart' hide Transaction;
 import '../models/transaction.dart';
 import '../models/transaction_item.dart';
 import '../models/accounting.dart';

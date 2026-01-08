@@ -6,7 +6,7 @@ import '../utils/constants.dart';
 import 'add_customer_screen.dart';
 
 class CustomerManagementScreen extends StatefulWidget {
-  const CustomerManagementScreen({Key? key}) : super(key: key);
+  const CustomerManagementScreen({super.key});
 
   @override
   State<CustomerManagementScreen> createState() => _CustomerManagementScreenState();

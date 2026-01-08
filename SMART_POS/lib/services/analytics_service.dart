@@ -1,9 +1,4 @@
-import 'package:sqflite/sqflite.dart';
 import '../services/database_service.dart';
-import '../models/transaction.dart';
-import '../models/transaction_item.dart';
-import '../models/customer.dart';
-import '../models/product.dart';
 
 class AnalyticsService {
   final DatabaseService _databaseService = DatabaseService();

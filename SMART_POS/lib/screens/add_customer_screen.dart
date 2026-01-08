@@ -5,7 +5,7 @@ import '../models/customer.dart';
 import '../utils/constants.dart';
 
 class AddCustomerScreen extends StatefulWidget {
-  const AddCustomerScreen({Key? key}) : super(key: key);
+  const AddCustomerScreen({super.key});
 
   @override
   State<AddCustomerScreen> createState() => _AddCustomerScreenState();

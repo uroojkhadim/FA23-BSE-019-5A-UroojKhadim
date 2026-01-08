@@ -3,7 +3,7 @@ import '../services/backup_service.dart';
 import '../utils/constants.dart';
 
 class BackupScreen extends StatefulWidget {
-  const BackupScreen({Key? key}) : super(key: key);
+  const BackupScreen({super.key});
 
   @override
   State<BackupScreen> createState() => _BackupScreenState();

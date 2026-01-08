@@ -75,7 +75,7 @@ class ProductProvider with ChangeNotifier {
     try {
       // Get the current product to compare quantities
       Product? currentProduct = _products.firstWhere((p) => p.id == product.id, orElse: () => product);
-      int quantityDifference = product.quantity - (currentProduct?.quantity ?? 0);
+      int quantityDifference = product.quantity - (currentProduct.quantity ?? 0);
       
       int result = await _productService.updateProduct(product);
       if (result > 0) {

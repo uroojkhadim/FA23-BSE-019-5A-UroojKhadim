@@ -7,7 +7,7 @@ import '../utils/constants.dart';
 import 'add_product_screen.dart';
 
 class PosScreen extends StatefulWidget {
-  const PosScreen({Key? key}) : super(key: key);
+  const PosScreen({super.key});
 
   @override
   State<PosScreen> createState() => _PosScreenState();

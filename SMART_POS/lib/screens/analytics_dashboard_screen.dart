@@ -4,7 +4,7 @@ import '../providers/analytics_provider.dart';
 import '../utils/date_formatter.dart';
 
 class AnalyticsDashboardScreen extends StatefulWidget {
-  const AnalyticsDashboardScreen({Key? key}) : super(key: key);
+  const AnalyticsDashboardScreen({super.key});
 
   @override
   State<AnalyticsDashboardScreen> createState() => _AnalyticsDashboardScreenState();
@@ -371,7 +371,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
                 subtitle: Text('Quantity: $totalQuantity'),
                 trailing: Text('₹${totalRevenue.toStringAsFixed(2)}'),
               );
-            }).toList(),
+            }),
           ],
         ),
       ),
@@ -410,7 +410,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
                 subtitle: Text('Transactions: $transactionCount'),
                 trailing: Text('₹${totalSpent.toStringAsFixed(2)}'),
               );
-            }).toList(),
+            }),
           ],
         ),
       ),
@@ -449,7 +449,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> {
                 subtitle: Text('Count: $count'),
                 trailing: Text('₹${totalAmount.toStringAsFixed(2)}'),
               );
-            }).toList(),
+            }),
           ],
         ),
       ),

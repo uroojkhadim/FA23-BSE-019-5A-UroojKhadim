@@ -10,7 +10,7 @@ import '../utils/constants.dart';
 class PosCartProvider with ChangeNotifier {
   final TransactionService _transactionService = TransactionService();
   final InventoryService _inventoryService = InventoryService();
-  List<TransactionItem> _cartItems = [];
+  final List<TransactionItem> _cartItems = [];
   double _subTotal = 0.0;
   double _tax = 0.0;
   double _discount = 0.0;

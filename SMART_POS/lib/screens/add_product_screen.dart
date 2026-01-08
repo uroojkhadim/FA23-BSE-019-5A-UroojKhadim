@@ -5,7 +5,7 @@ import '../models/product.dart';
 import '../utils/constants.dart';
 
 class AddProductScreen extends StatefulWidget {
-  const AddProductScreen({Key? key}) : super(key: key);
+  const AddProductScreen({super.key});
 
   @override
   State<AddProductScreen> createState() => _AddProductScreenState();
@@ -21,7 +21,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final _categoryController = TextEditingController();
   final _descriptionController = TextEditingController();
 
-  String _selectedCategory = 'General';
+  final String _selectedCategory = 'General';
   bool _isLoading = false;
 
   @override

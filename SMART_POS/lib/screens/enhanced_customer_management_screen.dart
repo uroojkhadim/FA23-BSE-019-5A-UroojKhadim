@@ -4,7 +4,7 @@ import '../providers/customer_provider.dart';
 import '../models/customer.dart';
 
 class EnhancedCustomerManagementScreen extends StatefulWidget {
-  const EnhancedCustomerManagementScreen({Key? key}) : super(key: key);
+  const EnhancedCustomerManagementScreen({super.key});
 
   @override
   State<EnhancedCustomerManagementScreen> createState() => _EnhancedCustomerManagementScreenState();
