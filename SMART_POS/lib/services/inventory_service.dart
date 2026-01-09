@@ -7,7 +7,7 @@ class InventoryService {
   // Create inventory tables
   Future<void> createInventoryTables() async {
     final db = await _databaseService.database;
-    
+
     await db.execute('''
       CREATE TABLE IF NOT EXISTS inventory_transactions(
         id TEXT PRIMARY KEY,
@@ -38,12 +38,16 @@ class InventoryService {
   }
 
   // Inventory transaction operations
-  Future<int> insertInventoryTransaction(InventoryTransaction transaction) async {
+  Future<int> insertInventoryTransaction(
+    InventoryTransaction transaction,
+  ) async {
     final db = await _databaseService.database;
     return await db.insert('inventory_transactions', transaction.toMap());
   }
 
-  Future<List<InventoryTransaction>> getInventoryTransactionsByProduct(String productId) async {
+  Future<List<InventoryTransaction>> getInventoryTransactionsByProduct(
+    String productId,
+  ) async {
     final db = await _databaseService.database;
     final List<Map<String, dynamic>> maps = await db.query(
       'inventory_transactions',
@@ -51,11 +55,17 @@ class InventoryService {
       whereArgs: [productId],
       orderBy: 'date DESC',
     );
-    
-    return List.generate(maps.length, (i) => InventoryTransaction.fromMap(maps[i]));
+
+    return List.generate(
+      maps.length,
+      (i) => InventoryTransaction.fromMap(maps[i]),
+    );
   }
 
-  Future<List<InventoryTransaction>> getInventoryTransactionsByDateRange(DateTime start, DateTime end) async {
+  Future<List<InventoryTransaction>> getInventoryTransactionsByDateRange(
+    DateTime start,
+    DateTime end,
+  ) async {
     final db = await _databaseService.database;
     final List<Map<String, dynamic>> maps = await db.query(
       'inventory_transactions',
@@ -63,8 +73,11 @@ class InventoryService {
       whereArgs: [start.toIso8601String(), end.toIso8601String()],
       orderBy: 'date DESC',
     );
-    
-    return List.generate(maps.length, (i) => InventoryTransaction.fromMap(maps[i]));
+
+    return List.generate(
+      maps.length,
+      (i) => InventoryTransaction.fromMap(maps[i]),
+    );
   }
 
   Future<List<InventoryTransaction>> getAllInventoryTransactions() async {
@@ -73,8 +86,11 @@ class InventoryService {
       'inventory_transactions',
       orderBy: 'date DESC',
     );
-    
-    return List.generate(maps.length, (i) => InventoryTransaction.fromMap(maps[i]));
+
+    return List.generate(
+      maps.length,
+      (i) => InventoryTransaction.fromMap(maps[i]),
+    );
   }
 
   // Product variant operations
@@ -111,25 +127,30 @@ class InventoryService {
     return null;
   }
 
-  Future<List<ProductVariant>> getProductVariantsByProduct(String productId) async {
+  Future<List<ProductVariant>> getProductVariantsByProduct(
+    String productId,
+  ) async {
     final db = await _databaseService.database;
     final List<Map<String, dynamic>> maps = await db.query(
       'product_variants',
       where: 'productId = ?',
       whereArgs: [productId],
     );
-    
+
     return List.generate(maps.length, (i) => ProductVariant.fromMap(maps[i]));
   }
 
   Future<List<ProductVariant>> getAllProductVariants() async {
     final db = await _databaseService.database;
     final List<Map<String, dynamic>> maps = await db.query('product_variants');
-    
+
     return List.generate(maps.length, (i) => ProductVariant.fromMap(maps[i]));
   }
 
-  Future<int> updateProductVariantQuantity(String variantId, int newQuantity) async {
+  Future<int> updateProductVariantQuantity(
+    String variantId,
+    int newQuantity,
+  ) async {
     final db = await _databaseService.database;
     return await db.update(
       'product_variants',
@@ -142,50 +163,54 @@ class InventoryService {
   // Get current inventory level for a product
   Future<int> getCurrentInventoryLevel(String productId) async {
     final db = await _databaseService.database;
-    
+
     // First, get all inventory transactions for this product
     final List<Map<String, dynamic>> maps = await db.query(
       'inventory_transactions',
       where: 'productId = ?',
       whereArgs: [productId],
     );
-    
+
     int totalQuantity = 0;
     for (var map in maps) {
       final transaction = InventoryTransaction.fromMap(map);
-      if (transaction.transactionType == 'in' || transaction.transactionType == 'adjustment') {
+      if (transaction.transactionType == 'in' ||
+          transaction.transactionType == 'adjustment') {
         totalQuantity += transaction.quantity;
-      } else if (transaction.transactionType == 'out' || transaction.transactionType == 'damage') {
+      } else if (transaction.transactionType == 'out' ||
+          transaction.transactionType == 'damage') {
         totalQuantity -= transaction.quantity;
       }
     }
-    
+
     // Add any product variants quantities
     final List<Map<String, dynamic>> variantMaps = await db.query(
       'product_variants',
       where: 'productId = ?',
       whereArgs: [productId],
     );
-    
+
     for (var map in variantMaps) {
       totalQuantity += (map['quantity'] as int?) ?? 0;
     }
-    
+
     return totalQuantity;
   }
 
   // Get low stock products
-  Future<List<Map<String, dynamic>>> getLowStockProducts({int threshold = 10}) async {
+  Future<List<Map<String, dynamic>>> getLowStockProducts({
+    int threshold = 10,
+  }) async {
     final db = await _databaseService.database;
-    
+
     // Get products with quantity below threshold
     final List<Map<String, dynamic>> productMaps = await db.query(
       'products',
       columns: ['id', 'name', 'quantity', 'sku'],
     );
-    
+
     List<Map<String, dynamic>> lowStockProducts = [];
-    
+
     for (var productMap in productMaps) {
       int currentQuantity = await getCurrentInventoryLevel(productMap['id']);
       if (currentQuantity <= threshold) {
@@ -197,7 +222,7 @@ class InventoryService {
         });
       }
     }
-    
+
     return lowStockProducts;
   }
 }

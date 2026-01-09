@@ -9,7 +9,8 @@ class CustomerManagementScreen extends StatefulWidget {
   const CustomerManagementScreen({super.key});
 
   @override
-  State<CustomerManagementScreen> createState() => _CustomerManagementScreenState();
+  State<CustomerManagementScreen> createState() =>
+      _CustomerManagementScreenState();
 }
 
 class _CustomerManagementScreenState extends State<CustomerManagementScreen> {
@@ -27,9 +28,7 @@ class _CustomerManagementScreenState extends State<CustomerManagementScreen> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (context) => const AddCustomerScreen(),
-            ),
+            MaterialPageRoute(builder: (context) => const AddCustomerScreen()),
           ).then((value) => setState(() {})); // Refresh after adding
         },
         child: const Icon(Icons.add),
@@ -53,7 +52,7 @@ class _CustomerManagementScreenState extends State<CustomerManagementScreen> {
               },
             ),
           ),
-          
+
           // Customers list
           Expanded(
             child: Consumer<CustomerProvider>(
@@ -61,15 +60,15 @@ class _CustomerManagementScreenState extends State<CustomerManagementScreen> {
                 if (customerProvider.isLoading) {
                   return const Center(child: CircularProgressIndicator());
                 }
-                
-                List<Customer> customers = customerProvider.searchCustomers(_searchQuery);
-                
+
+                List<Customer> customers = customerProvider.searchCustomers(
+                  _searchQuery,
+                );
+
                 if (customers.isEmpty) {
-                  return const Center(
-                    child: Text('No customers found'),
-                  );
+                  return const Center(child: Text('No customers found'));
                 }
-                
+
                 return ListView.builder(
                   itemCount: customers.length,
                   itemBuilder: (context, index) {
@@ -84,9 +83,13 @@ class _CustomerManagementScreenState extends State<CustomerManagementScreen> {
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            if (customer.email != null) Text('Email: ${customer.email}'),
-                            if (customer.phone != null) Text('Phone: ${customer.phone}'),
-                            Text('Total Purchase: \$${customer.totalPurchase.toStringAsFixed(2)}'),
+                            if (customer.email != null)
+                              Text('Email: ${customer.email}'),
+                            if (customer.phone != null)
+                              Text('Phone: ${customer.phone}'),
+                            Text(
+                              'Total Purchase: \$${customer.totalPurchase.toStringAsFixed(2)}',
+                            ),
                           ],
                         ),
                         trailing: Text(
@@ -122,8 +125,11 @@ class _CustomerManagementScreenState extends State<CustomerManagementScreen> {
               children: [
                 if (customer.email != null) Text('Email: ${customer.email}'),
                 if (customer.phone != null) Text('Phone: ${customer.phone}'),
-                if (customer.address != null) Text('Address: ${customer.address}'),
-                Text('Total Purchase: \$${customer.totalPurchase.toStringAsFixed(2)}'),
+                if (customer.address != null)
+                  Text('Address: ${customer.address}'),
+                Text(
+                  'Total Purchase: \$${customer.totalPurchase.toStringAsFixed(2)}',
+                ),
                 Text('Added: ${customer.createdAt}'),
               ],
             ),

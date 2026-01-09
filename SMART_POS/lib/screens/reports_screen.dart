@@ -12,10 +12,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Reports'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Reports'), centerTitle: true),
       body: Padding(
         padding: const EdgeInsets.all(AppConstants.paddingMedium),
         child: Column(
@@ -37,7 +34,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
               ),
             ),
             const SizedBox(height: AppConstants.paddingMedium),
-            
+
             // Report options
             Expanded(
               child: GridView.count(
@@ -110,11 +107,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   color: color.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(12.0),
                 ),
-                child: Icon(
-                  icon,
-                  size: 40,
-                  color: color,
-                ),
+                child: Icon(icon, size: 40, color: color),
               ),
               const SizedBox(height: 12.0),
               Text(
@@ -139,7 +132,9 @@ class _ReportsScreenState extends State<ReportsScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('$reportType Report'),
-          content: const Text('This report will be generated based on your data.'),
+          content: const Text(
+            'This report will be generated based on your data.',
+          ),
           actions: [
             TextButton(
               onPressed: () {

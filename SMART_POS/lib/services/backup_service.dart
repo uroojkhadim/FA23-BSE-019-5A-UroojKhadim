@@ -21,19 +21,22 @@ class BackupService {
     try {
       // Get database path
       String dbPath = await getDatabasesPath();
-      String backupPath = join(dbPath, 'backup_${DateTime.now().millisecondsSinceEpoch}.json');
-      
+      String backupPath = join(
+        dbPath,
+        'backup_${DateTime.now().millisecondsSinceEpoch}.json',
+      );
+
       // Get all data from database
       Map<String, dynamic> backupData = await _getAllData();
-      
+
       // Write to file
       File backupFile = File(backupPath);
       await backupFile.writeAsString(jsonEncode(backupData));
-      
+
       // Save backup path to shared preferences
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString(AppConstants.backupPathKey, backupPath);
-      
+
       return true;
     } catch (e) {
       print('Error creating local backup: $e');
@@ -48,13 +51,13 @@ class BackupService {
       if (!await backupFile.exists()) {
         return false;
       }
-      
+
       String jsonString = await backupFile.readAsString();
       Map<String, dynamic> backupData = jsonDecode(jsonString);
-      
+
       // Clear existing data and restore from backup
       await _restoreAllData(backupData);
-      
+
       return true;
     } catch (e) {
       print('Error restoring from local backup: $e');
@@ -81,7 +84,7 @@ class BackupService {
       // Get backup data
       Map<String, dynamic> backupData = await _getAllData();
       String jsonString = jsonEncode(backupData);
-      
+
       // Upload to Google Drive
       // This is a simplified implementation - in a real app, you would need to make
       // actual API calls to Google Drive to upload the file
@@ -132,23 +135,34 @@ class BackupService {
     };
 
     // Get all users
-    List<Map<String, dynamic>> users = await _databaseService.getAllUsers()
+    List<Map<String, dynamic>> users = await _databaseService
+        .getAllUsers()
         .then((users) => users.map((user) => user.toMap()).toList());
     backupData['users'] = users;
 
     // Get all products
-    List<Map<String, dynamic>> products = await _databaseService.getAllProducts()
-        .then((products) => products.map((product) => product.toMap()).toList());
+    List<Map<String, dynamic>> products = await _databaseService
+        .getAllProducts()
+        .then(
+          (products) => products.map((product) => product.toMap()).toList(),
+        );
     backupData['products'] = products;
 
     // Get all customers
-    List<Map<String, dynamic>> customers = await _databaseService.getAllCustomers()
-        .then((customers) => customers.map((customer) => customer.toMap()).toList());
+    List<Map<String, dynamic>> customers = await _databaseService
+        .getAllCustomers()
+        .then(
+          (customers) => customers.map((customer) => customer.toMap()).toList(),
+        );
     backupData['customers'] = customers;
 
     // Get all transactions
-    List<Map<String, dynamic>> transactions = await _databaseService.getAllTransactions()
-        .then((transactions) => transactions.map((transaction) => transaction.toMap()).toList());
+    List<Map<String, dynamic>> transactions = await _databaseService
+        .getAllTransactions()
+        .then(
+          (transactions) =>
+              transactions.map((transaction) => transaction.toMap()).toList(),
+        );
     backupData['transactions'] = transactions;
 
     // Get all transaction items (we would need to get them separately)
@@ -162,7 +176,7 @@ class BackupService {
   Future<void> _restoreAllData(Map<String, dynamic> backupData) async {
     // Clear existing data (be careful with this in production)
     // In a real app, you might want to validate the data before restoring
-    
+
     // Restore users
     List<dynamic> users = backupData['users'] ?? [];
     for (var userData in users) {
@@ -197,17 +211,17 @@ class BackupService {
     try {
       String dbPath = await getDatabasesPath();
       Directory dbDirectory = Directory(dbPath);
-      
+
       if (await dbDirectory.exists()) {
         List<FileSystemEntity> files = dbDirectory.listSync();
         List<String> backupFiles = [];
-        
+
         for (FileSystemEntity file in files) {
           if (file.path.contains('backup_') && file.path.endsWith('.json')) {
             backupFiles.add(file.path);
           }
         }
-        
+
         // Sort by date (newest first)
         backupFiles.sort((a, b) {
           String aDate = a.split('backup_').last.split('.json').first;
@@ -216,10 +230,10 @@ class BackupService {
           int bTimestamp = int.tryParse(bDate) ?? 0;
           return bTimestamp.compareTo(aTimestamp);
         });
-        
+
         return backupFiles;
       }
-      
+
       return [];
     } catch (e) {
       print('Error getting local backups: $e');

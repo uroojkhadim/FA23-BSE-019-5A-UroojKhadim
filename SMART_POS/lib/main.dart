@@ -37,8 +37,8 @@ class MyApp extends StatelessWidget {
             home: authProvider.isLoading
                 ? const LoadingScreen()
                 : authProvider.isAuthenticated
-                    ? const HomeScreen()
-                    : const LoginScreen(),
+                ? const HomeScreen()
+                : const LoginScreen(),
             routes: {
               '/login': (context) => const LoginScreen(),
               '/home': (context) => const HomeScreen(),
@@ -55,10 +55,6 @@ class LoadingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: CircularProgressIndicator(),
-      ),
-    );
+    return const Scaffold(body: Center(child: CircularProgressIndicator()));
   }
 }

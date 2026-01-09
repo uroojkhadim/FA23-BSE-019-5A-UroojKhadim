@@ -4,7 +4,6 @@ import '../providers/product_provider.dart';
 import '../providers/pos_cart_provider.dart';
 import '../models/product.dart';
 import '../utils/constants.dart';
-import 'add_product_screen.dart';
 
 class PosScreen extends StatefulWidget {
   const PosScreen({super.key});
@@ -54,14 +53,16 @@ class _PosScreenState extends State<PosScreen> {
               },
             ),
           ),
-          
+
           // Product list
           Expanded(
             flex: 2,
             child: Consumer<ProductProvider>(
               builder: (context, productProvider, child) {
-                List<Product> products = productProvider.searchProducts(_searchQuery);
-                
+                List<Product> products = productProvider.searchProducts(
+                  _searchQuery,
+                );
+
                 return GridView.builder(
                   gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                     maxCrossAxisExtent: 150,
@@ -81,7 +82,9 @@ class _PosScreenState extends State<PosScreen> {
                             children: [
                               Text(
                                 product.name,
-                                style: const TextStyle(fontWeight: FontWeight.bold),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
                                 textAlign: TextAlign.center,
                               ),
                               const SizedBox(height: 4),
@@ -93,7 +96,9 @@ class _PosScreenState extends State<PosScreen> {
                               Text(
                                 'Qty: ${product.quantity}',
                                 style: TextStyle(
-                                  color: product.quantity < 5 ? Colors.red : Colors.grey,
+                                  color: product.quantity < 5
+                                      ? Colors.red
+                                      : Colors.grey,
                                 ),
                               ),
                             ],
@@ -106,7 +111,7 @@ class _PosScreenState extends State<PosScreen> {
               },
             ),
           ),
-          
+
           // Cart section
           Expanded(
             flex: 1,
@@ -142,39 +147,48 @@ class _PosScreenState extends State<PosScreen> {
                       ],
                     ),
                   ),
-                  
+
                   // Cart items
                   Expanded(
                     child: Consumer<PosCartProvider>(
                       builder: (context, cartProvider, child) {
                         if (cartProvider.cartItems.isEmpty) {
-                          return const Center(
-                            child: Text('Add items to cart'),
-                          );
+                          return const Center(child: Text('Add items to cart'));
                         }
-                        
+
                         return ListView.builder(
                           itemCount: cartProvider.cartItems.length,
                           itemBuilder: (context, index) {
                             var item = cartProvider.cartItems[index];
                             return ListTile(
                               title: Text(item.productName),
-                              subtitle: Text('Qty: ${item.quantity} x \$${item.unitPrice.toStringAsFixed(2)}'),
+                              subtitle: Text(
+                                'Qty: ${item.quantity} x \$${item.unitPrice.toStringAsFixed(2)}',
+                              ),
                               trailing: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   IconButton(
                                     icon: const Icon(Icons.remove),
-                                    onPressed: () => cartProvider.updateItemQuantity(item.productId, item.quantity - 1),
+                                    onPressed: () =>
+                                        cartProvider.updateItemQuantity(
+                                          item.productId,
+                                          item.quantity - 1,
+                                        ),
                                   ),
                                   Text('${item.quantity}'),
                                   IconButton(
                                     icon: const Icon(Icons.add),
-                                    onPressed: () => cartProvider.updateItemQuantity(item.productId, item.quantity + 1),
+                                    onPressed: () =>
+                                        cartProvider.updateItemQuantity(
+                                          item.productId,
+                                          item.quantity + 1,
+                                        ),
                                   ),
                                   IconButton(
                                     icon: const Icon(Icons.delete),
-                                    onPressed: () => cartProvider.removeItem(item.productId),
+                                    onPressed: () =>
+                                        cartProvider.removeItem(item.productId),
                                   ),
                                 ],
                               ),
@@ -188,7 +202,7 @@ class _PosScreenState extends State<PosScreen> {
               ),
             ),
           ),
-          
+
           // Action buttons
           Container(
             padding: const EdgeInsets.all(AppConstants.paddingMedium),
@@ -242,7 +256,7 @@ class _PosScreenState extends State<PosScreen> {
       );
     }
   }
-  
+
   void _showCartDetails(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -259,11 +273,9 @@ class _PosScreenState extends State<PosScreen> {
             return Consumer<PosCartProvider>(
               builder: (context, cartProvider, child) {
                 if (cartProvider.cartItems.isEmpty) {
-                  return const Center(
-                    child: Text('Cart is empty'),
-                  );
+                  return const Center(child: Text('Cart is empty'));
                 }
-                
+
                 return Column(
                   children: [
                     Container(
@@ -304,11 +316,18 @@ class _PosScreenState extends State<PosScreen> {
                         itemBuilder: (context, index) {
                           var item = cartProvider.cartItems[index];
                           return Card(
-                            margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+                            margin: const EdgeInsets.symmetric(
+                              horizontal: 16.0,
+                              vertical: 4.0,
+                            ),
                             child: ListTile(
                               title: Text(item.productName),
-                              subtitle: Text('₹${item.unitPrice.toStringAsFixed(2)} x ${item.quantity}'),
-                              trailing: Text('₹${item.total.toStringAsFixed(2)}'),
+                              subtitle: Text(
+                                '₹${item.unitPrice.toStringAsFixed(2)} x ${item.quantity}',
+                              ),
+                              trailing: Text(
+                                '₹${item.total.toStringAsFixed(2)}',
+                              ),
                             ),
                           );
                         },
@@ -377,9 +396,13 @@ class _PosScreenState extends State<PosScreen> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Subtotal: \$${cartProvider.subTotal.toStringAsFixed(2)}'),
+                  Text(
+                    'Subtotal: \$${cartProvider.subTotal.toStringAsFixed(2)}',
+                  ),
                   Text('Tax: \$${cartProvider.tax.toStringAsFixed(2)}'),
-                  Text('Discount: \$${cartProvider.discount.toStringAsFixed(2)}'),
+                  Text(
+                    'Discount: \$${cartProvider.discount.toStringAsFixed(2)}',
+                  ),
                   const Divider(),
                   Text('Total: \$${cartProvider.total.toStringAsFixed(2)}'),
                   Text('Payment Method: ${cartProvider.paymentMethod}'),

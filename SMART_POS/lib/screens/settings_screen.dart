@@ -14,10 +14,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Settings'), centerTitle: true),
       body: Consumer<AuthProvider>(
         builder: (context, authProvider, child) {
           return ListView(
@@ -38,13 +35,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           Container(
                             padding: const EdgeInsets.all(8.0),
                             decoration: BoxDecoration(
-                              color: Theme.of(context).primaryColor.withOpacity(0.1),
+                              color: Theme.of(
+                                context,
+                              ).primaryColor.withOpacity(0.1),
                               borderRadius: BorderRadius.circular(12.0),
                             ),
-                            child: const Icon(
-                              Icons.person,
-                              color: Colors.grey,
-                            ),
+                            child: const Icon(Icons.person, color: Colors.grey),
                           ),
                           const SizedBox(width: 12.0),
                           const Text(
@@ -62,7 +58,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           width: 50,
                           height: 50,
                           decoration: BoxDecoration(
-                            color: Theme.of(context).primaryColor.withOpacity(0.1),
+                            color: Theme.of(
+                              context,
+                            ).primaryColor.withOpacity(0.1),
                             shape: BoxShape.circle,
                           ),
                           child: const Icon(
@@ -80,24 +78,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ),
                         subtitle: Text(
                           authProvider.currentUser?.email ?? '',
-                          style: const TextStyle(
-                            fontSize: 14,
-                          ),
+                          style: const TextStyle(fontSize: 14),
                         ),
-                        trailing: const Icon(
-                          Icons.arrow_forward_ios,
-                          size: 16,
-                        ),
+                        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                         onTap: () => _showProfileDialog(context),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 4.0,
+                          vertical: 8.0,
+                        ),
                       ),
                     ],
                   ),
                 ),
               ),
-              
+
               const SizedBox(height: 12.0),
-              
+
               // Business settings
               Card(
                 elevation: 3,
@@ -141,24 +137,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             color: Colors.orange.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: const Icon(
-                            Icons.store,
-                            color: Colors.orange,
-                          ),
+                          child: const Icon(Icons.store, color: Colors.orange),
                         ),
                         title: const Text(
                           'Business Name',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                          ),
+                          style: TextStyle(fontWeight: FontWeight.w500),
                         ),
                         subtitle: const Text('Set your business name'),
-                        trailing: const Icon(
-                          Icons.arrow_forward_ios,
-                          size: 16,
-                        ),
+                        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                         onTap: () => _showBusinessNameDialog(context),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 4.0,
+                          vertical: 8.0,
+                        ),
                       ),
                       const Divider(height: 1),
                       ListTile(
@@ -169,32 +160,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             color: Colors.green.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: const Icon(
-                            Icons.receipt,
-                            color: Colors.green,
-                          ),
+                          child: const Icon(Icons.receipt, color: Colors.green),
                         ),
                         title: const Text(
                           'Tax Rate',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                          ),
+                          style: TextStyle(fontWeight: FontWeight.w500),
                         ),
                         subtitle: const Text('Set default tax rate'),
-                        trailing: const Icon(
-                          Icons.arrow_forward_ios,
-                          size: 16,
-                        ),
+                        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                         onTap: () => _showTaxRateDialog(context),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 4.0,
+                          vertical: 8.0,
+                        ),
                       ),
                     ],
                   ),
                 ),
               ),
-              
+
               const SizedBox(height: 12.0),
-              
+
               // Sync settings
               Card(
                 elevation: 3,
@@ -214,10 +200,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               color: Colors.blue.withOpacity(0.1),
                               borderRadius: BorderRadius.circular(12.0),
                             ),
-                            child: const Icon(
-                              Icons.sync,
-                              color: Colors.blue,
-                            ),
+                            child: const Icon(Icons.sync, color: Colors.blue),
                           ),
                           const SizedBox(width: 12.0),
                           const Text(
@@ -233,7 +216,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       SwitchListTile(
                         title: const Text('Auto Sync'),
                         subtitle: const Text('Automatically sync when online'),
-                        value: true, // This would be controlled by the sync provider
+                        value:
+                            true, // This would be controlled by the sync provider
                         onChanged: (value) {
                           // Handle auto sync toggle
                         },
@@ -247,28 +231,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             color: Colors.blue.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: const Icon(
-                            Icons.sync,
-                            color: Colors.blue,
-                          ),
+                          child: const Icon(Icons.sync, color: Colors.blue),
                         ),
                         title: const Text(
                           'Sync Now',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                          ),
+                          style: TextStyle(fontWeight: FontWeight.w500),
                         ),
                         subtitle: const Text('Manually sync data'),
                         onTap: () => _syncNow(context),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 4.0,
+                          vertical: 8.0,
+                        ),
                       ),
                     ],
                   ),
                 ),
               ),
-              
+
               const SizedBox(height: 12.0),
-              
+
               // Security
               Card(
                 elevation: 3,
@@ -288,10 +270,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               color: Colors.red.withOpacity(0.1),
                               borderRadius: BorderRadius.circular(12.0),
                             ),
-                            child: const Icon(
-                              Icons.lock,
-                              color: Colors.red,
-                            ),
+                            child: const Icon(Icons.lock, color: Colors.red),
                           ),
                           const SizedBox(width: 12.0),
                           const Text(
@@ -312,24 +291,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             color: Colors.red.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: const Icon(
-                            Icons.lock,
-                            color: Colors.red,
-                          ),
+                          child: const Icon(Icons.lock, color: Colors.red),
                         ),
                         title: const Text(
                           'Change Password',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                          ),
+                          style: TextStyle(fontWeight: FontWeight.w500),
                         ),
                         subtitle: const Text('Update your account password'),
-                        trailing: const Icon(
-                          Icons.arrow_forward_ios,
-                          size: 16,
-                        ),
+                        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                         onTap: () => _showChangePasswordDialog(context),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 4.0,
+                          vertical: 8.0,
+                        ),
                       ),
                     ],
                   ),
@@ -384,7 +358,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Business Name'),
-          content: const Text('This feature will be implemented in the next phase.'),
+          content: const Text(
+            'This feature will be implemented in the next phase.',
+          ),
           actions: [
             TextButton(
               onPressed: () {
@@ -405,7 +381,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Tax Rate'),
-          content: const Text('This feature will be implemented in the next phase.'),
+          content: const Text(
+            'This feature will be implemented in the next phase.',
+          ),
           actions: [
             TextButton(
               onPressed: () {
@@ -436,7 +414,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Change Password'),
-          content: const Text('This feature will be implemented in the next phase.'),
+          content: const Text(
+            'This feature will be implemented in the next phase.',
+          ),
           actions: [
             TextButton(
               onPressed: () {

@@ -9,7 +9,8 @@ class ProductManagementScreen extends StatefulWidget {
   const ProductManagementScreen({super.key});
 
   @override
-  State<ProductManagementScreen> createState() => _ProductManagementScreenState();
+  State<ProductManagementScreen> createState() =>
+      _ProductManagementScreenState();
 }
 
 class _ProductManagementScreenState extends State<ProductManagementScreen> {
@@ -27,9 +28,7 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (context) => const AddProductScreen(),
-            ),
+            MaterialPageRoute(builder: (context) => const AddProductScreen()),
           ).then((value) => setState(() {})); // Refresh after adding
         },
         child: const Icon(Icons.add),
@@ -57,7 +56,7 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
               },
             ),
           ),
-          
+
           // Products list
           Expanded(
             child: Consumer<ProductProvider>(
@@ -65,15 +64,15 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
                 if (productProvider.isLoading) {
                   return const Center(child: CircularProgressIndicator());
                 }
-                
-                List<Product> products = productProvider.searchProducts(_searchQuery);
-                
+
+                List<Product> products = productProvider.searchProducts(
+                  _searchQuery,
+                );
+
                 if (products.isEmpty) {
-                  return const Center(
-                    child: Text('No products found'),
-                  );
+                  return const Center(child: Text('No products found'));
                 }
-                
+
                 return ListView.builder(
                   itemCount: products.length,
                   itemBuilder: (context, index) {
@@ -90,7 +89,9 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
                             width: 50,
                             height: 50,
                             decoration: BoxDecoration(
-                              color: Theme.of(context).primaryColor.withOpacity(0.1),
+                              color: Theme.of(
+                                context,
+                              ).primaryColor.withOpacity(0.1),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: const Icon(
@@ -115,19 +116,28 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
                               Row(
                                 children: [
                                   Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 6,
+                                      vertical: 2,
+                                    ),
                                     decoration: BoxDecoration(
-                                      color: product.quantity < 5 ? Colors.red.withOpacity(0.1) : Colors.green.withOpacity(0.1),
+                                      color: product.quantity < 5
+                                          ? Colors.red.withOpacity(0.1)
+                                          : Colors.green.withOpacity(0.1),
                                       borderRadius: BorderRadius.circular(8),
                                       border: Border.all(
-                                        color: product.quantity < 5 ? Colors.red : Colors.green,
+                                        color: product.quantity < 5
+                                            ? Colors.red
+                                            : Colors.green,
                                         width: 1,
                                       ),
                                     ),
                                     child: Text(
                                       'Qty: ${product.quantity}',
                                       style: TextStyle(
-                                        color: product.quantity < 5 ? Colors.red : Colors.green,
+                                        color: product.quantity < 5
+                                            ? Colors.red
+                                            : Colors.green,
                                         fontSize: 12,
                                       ),
                                     ),
@@ -194,7 +204,8 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
                 Text('Cost: \$${product.cost.toStringAsFixed(2)}'),
                 Text('Quantity: ${product.quantity}'),
                 Text('Category: ${product.category}'),
-                if (product.description != null) Text('Description: ${product.description}'),
+                if (product.description != null)
+                  Text('Description: ${product.description}'),
                 Text('Added: ${product.createdAt}'),
               ],
             ),

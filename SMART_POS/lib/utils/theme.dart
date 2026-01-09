@@ -51,11 +51,16 @@ class AppTheme {
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(AppConstants.borderRadius),
-        borderSide: const BorderSide(color: Color(AppConstants.primaryColorValue)),
+        borderSide: const BorderSide(
+          color: Color(AppConstants.primaryColorValue),
+        ),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(AppConstants.borderRadius),
-        borderSide: const BorderSide(color: Color(AppConstants.secondaryColorValue), width: 2),
+        borderSide: const BorderSide(
+          color: Color(AppConstants.secondaryColorValue),
+          width: 2,
+        ),
       ),
       filled: true,
       fillColor: Colors.white,
@@ -84,14 +89,8 @@ class AppTheme {
         fontWeight: FontWeight.w500,
         color: Color(0xFF333333),
       ),
-      bodyLarge: TextStyle(
-        fontSize: 16,
-        color: Color(0xFF333333),
-      ),
-      bodyMedium: TextStyle(
-        fontSize: 14,
-        color: Color(0xFF666666),
-      ),
+      bodyLarge: TextStyle(fontSize: 16, color: Color(0xFF333333)),
+      bodyMedium: TextStyle(fontSize: 14, color: Color(0xFF666666)),
     ),
   );
 
@@ -144,11 +143,16 @@ class AppTheme {
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(AppConstants.borderRadius),
-        borderSide: const BorderSide(color: Color(AppConstants.primaryColorValue)),
+        borderSide: const BorderSide(
+          color: Color(AppConstants.primaryColorValue),
+        ),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(AppConstants.borderRadius),
-        borderSide: const BorderSide(color: Color(AppConstants.secondaryColorValue), width: 2),
+        borderSide: const BorderSide(
+          color: Color(AppConstants.secondaryColorValue),
+          width: 2,
+        ),
       ),
       filled: true,
       fillColor: Color(0xFF333333),
@@ -177,14 +181,8 @@ class AppTheme {
         fontWeight: FontWeight.w500,
         color: Colors.white,
       ),
-      bodyLarge: TextStyle(
-        fontSize: 16,
-        color: Colors.white,
-      ),
-      bodyMedium: TextStyle(
-        fontSize: 14,
-        color: Color(0xFFCCCCCC),
-      ),
+      bodyLarge: TextStyle(fontSize: 16, color: Colors.white),
+      bodyMedium: TextStyle(fontSize: 14, color: Color(0xFFCCCCCC)),
     ),
   );
 }

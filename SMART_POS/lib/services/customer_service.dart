@@ -38,7 +38,10 @@ class CustomerService {
   }
 
   // Update customer's total purchase amount
-  Future<bool> updateCustomerTotalPurchase(int? customerId, double newTotal) async {
+  Future<bool> updateCustomerTotalPurchase(
+    int? customerId,
+    double newTotal,
+  ) async {
     if (customerId == null) return false;
     try {
       Customer? customer = await _databaseService.getCustomer(customerId);
@@ -58,7 +61,10 @@ class CustomerService {
   }
 
   // Add to customer's total purchase amount
-  Future<bool> addToCustomerTotalPurchase(int? customerId, double amount) async {
+  Future<bool> addToCustomerTotalPurchase(
+    int? customerId,
+    double amount,
+  ) async {
     if (customerId == null) return false;
     try {
       Customer? customer = await _databaseService.getCustomer(customerId);
@@ -76,11 +82,16 @@ class CustomerService {
   // Search customers by name
   Future<List<Customer>> searchCustomersByName(String name) async {
     List<Customer> allCustomers = await _databaseService.getAllCustomers();
-    return allCustomers.where((customer) => 
-      customer.name.toLowerCase().contains(name.toLowerCase()) ||
-      (customer.phone?.toLowerCase().contains(name.toLowerCase()) ?? false) ||
-      (customer.email?.toLowerCase().contains(name.toLowerCase()) ?? false)
-    ).toList();
+    return allCustomers
+        .where(
+          (customer) =>
+              customer.name.toLowerCase().contains(name.toLowerCase()) ||
+              (customer.phone?.toLowerCase().contains(name.toLowerCase()) ??
+                  false) ||
+              (customer.email?.toLowerCase().contains(name.toLowerCase()) ??
+                  false),
+        )
+        .toList();
   }
 
   // Get top customers by purchase amount

@@ -29,8 +29,10 @@ class PosCartProvider with ChangeNotifier {
   // Add item to cart
   void addItem(Product product, {int quantity = 1}) {
     // Check if item already exists in cart
-    int existingIndex = _cartItems.indexWhere((item) => item.productId == product.id);
-    
+    int existingIndex = _cartItems.indexWhere(
+      (item) => item.productId == product.id,
+    );
+
     if (existingIndex != -1) {
       // Update quantity if item exists
       TransactionItem existingItem = _cartItems[existingIndex];
@@ -50,7 +52,7 @@ class PosCartProvider with ChangeNotifier {
       );
       _cartItems.add(newItem);
     }
-    
+
     _calculateTotals();
     notifyListeners();
   }
@@ -61,7 +63,7 @@ class PosCartProvider with ChangeNotifier {
       removeItem(productId);
       return;
     }
-    
+
     int index = _cartItems.indexWhere((item) => item.productId == productId);
     if (index != -1) {
       TransactionItem item = _cartItems[index];
@@ -150,7 +152,7 @@ class PosCartProvider with ChangeNotifier {
 
       // Save transaction
       String result = await _transactionService.addTransaction(transaction);
-      
+
       if (result.isNotEmpty) {
         // Update transaction items with actual transaction ID
         for (TransactionItem item in _cartItems) {
@@ -158,7 +160,7 @@ class PosCartProvider with ChangeNotifier {
             transactionId: transactionId,
           );
           await _transactionService.addTransactionItem(updatedItem);
-          
+
           // Create inventory transaction to reduce stock
           final inventoryTransaction = InventoryTransaction(
             id: 'inv_${transactionId}_${item.productId}',
@@ -172,14 +174,16 @@ class PosCartProvider with ChangeNotifier {
             referenceId: transactionId,
             notes: 'POS sale transaction',
           );
-          await _inventoryService.insertInventoryTransaction(inventoryTransaction);
+          await _inventoryService.insertInventoryTransaction(
+            inventoryTransaction,
+          );
         }
-        
+
         // Clear cart after successful transaction
         clearCart();
         return true;
       }
-      
+
       return false;
     } catch (e) {
       print('Error processing transaction: $e');

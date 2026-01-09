@@ -5,7 +5,6 @@ import '../utils/constants.dart';
 import 'login_screen.dart';
 import 'product_management_screen.dart';
 import 'pos_screen.dart';
-import 'customer_management_screen.dart';
 import 'enhanced_customer_management_screen.dart';
 import 'reports_screen.dart';
 import 'backup_screen.dart';
@@ -27,9 +26,7 @@ class HomeScreen extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => const SettingsScreen(),
-                ),
+                MaterialPageRoute(builder: (context) => const SettingsScreen()),
               );
             },
           ),
@@ -57,9 +54,7 @@ class HomeScreen extends StatelessWidget {
       body: Consumer<AuthProvider>(
         builder: (context, authProvider, child) {
           if (authProvider.currentUser == null) {
-            return const Center(
-              child: Text('User not authenticated'),
-            );
+            return const Center(child: Text('User not authenticated'));
           }
 
           return Padding(
@@ -76,9 +71,7 @@ class HomeScreen extends StatelessWidget {
                   color: Colors.blue,
                   onTap: () => Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => const PosScreen(),
-                    ),
+                    MaterialPageRoute(builder: (context) => const PosScreen()),
                   ),
                 ),
                 _buildHomeCard(
@@ -101,7 +94,8 @@ class HomeScreen extends StatelessWidget {
                   onTap: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const EnhancedCustomerManagementScreen(),
+                      builder: (context) =>
+                          const EnhancedCustomerManagementScreen(),
                     ),
                   ),
                 ),
@@ -184,11 +178,7 @@ class HomeScreen extends StatelessWidget {
                   color: color.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(12.0),
                 ),
-                child: Icon(
-                  icon,
-                  size: 40,
-                  color: color,
-                ),
+                child: Icon(icon, size: 40, color: color),
               ),
               const SizedBox(height: 12.0),
               Text(

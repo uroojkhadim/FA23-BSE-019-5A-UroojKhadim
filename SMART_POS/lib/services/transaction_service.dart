@@ -14,26 +14,32 @@ class TransactionService {
     if (result != 0) {
       // Create accounting entries for the transaction
       await _createAccountingEntries(transaction);
-      
+
       // Update customer's total purchase if customer exists
       if (transaction.customerId != null) {
-        await _updateCustomerTotalPurchase(transaction.customerId!, transaction.total);
+        await _updateCustomerTotalPurchase(
+          transaction.customerId!,
+          transaction.total,
+        );
       }
-      
+
       return transaction.transactionId;
     }
     return '';
   }
-  
+
   // Update customer's total purchase
-  Future<void> _updateCustomerTotalPurchase(int customerId, double amount) async {
+  Future<void> _updateCustomerTotalPurchase(
+    int customerId,
+    double amount,
+  ) async {
     try {
       await _databaseService.addToCustomerTotalPurchase(customerId, amount);
     } catch (e) {
       print('Error updating customer total purchase: $e');
     }
   }
-  
+
   // Create accounting entries for a transaction
   Future<void> _createAccountingEntries(Transaction transaction) async {
     // Create revenue account entry
@@ -48,7 +54,7 @@ class TransactionService {
       description: 'Revenue from transaction ${transaction.transactionId}',
     );
     await _accountingService.insertAccountingEntry(revenueEntry);
-    
+
     // Create cash/credit account entry
     final cashEntry = AccountingEntry(
       id: 'cash_${transaction.transactionId}',
@@ -58,10 +64,11 @@ class TransactionService {
       debit: transaction.total,
       credit: 0.0,
       date: transaction.transactionDate,
-      description: 'Cash received from transaction ${transaction.transactionId}',
+      description:
+          'Cash received from transaction ${transaction.transactionId}',
     );
     await _accountingService.insertAccountingEntry(cashEntry);
-    
+
     // Create tax liability account entry
     if (transaction.tax > 0) {
       final taxEntry = AccountingEntry(
@@ -72,11 +79,12 @@ class TransactionService {
         debit: 0.0,
         credit: transaction.tax,
         date: transaction.transactionDate,
-        description: 'Tax liability from transaction ${transaction.transactionId}',
+        description:
+            'Tax liability from transaction ${transaction.transactionId}',
       );
       await _accountingService.insertAccountingEntry(taxEntry);
     }
-    
+
     // Create discount expense account entry
     if (transaction.discount > 0) {
       final discountEntry = AccountingEntry(
@@ -87,7 +95,8 @@ class TransactionService {
         debit: transaction.discount,
         credit: 0.0,
         date: transaction.transactionDate,
-        description: 'Discount expense from transaction ${transaction.transactionId}',
+        description:
+            'Discount expense from transaction ${transaction.transactionId}',
       );
       await _accountingService.insertAccountingEntry(discountEntry);
     }
@@ -104,7 +113,10 @@ class TransactionService {
   }
 
   // Get transactions by date range
-  Future<List<Transaction>> getTransactionsByDateRange(DateTime start, DateTime end) async {
+  Future<List<Transaction>> getTransactionsByDateRange(
+    DateTime start,
+    DateTime end,
+  ) async {
     return await _databaseService.getTransactionsByDateRange(start, end);
   }
 
@@ -127,100 +139,133 @@ class TransactionService {
   }
 
   // Get transaction items for a transaction
-  Future<List<TransactionItem>> getTransactionItems(String transactionId) async {
+  Future<List<TransactionItem>> getTransactionItems(
+    String transactionId,
+  ) async {
     return await _databaseService.getTransactionItems(transactionId);
   }
 
   // Get total sales for a date range
   Future<double> getTotalSales({DateTime? startDate, DateTime? endDate}) async {
-    List<Transaction> transactions = await _databaseService.getAllTransactions();
-    
-    DateTime start = startDate ?? DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+    List<Transaction> transactions = await _databaseService
+        .getAllTransactions();
+
+    DateTime start =
+        startDate ??
+        DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
     DateTime end = endDate ?? DateTime.now();
-    
+
     double total = 0.0;
     for (Transaction transaction in transactions) {
-      DateTime transactionDate = DateTime.parse(transaction.transactionDate.toIso8601String());
-      if (transactionDate.isAfter(start) && transactionDate.isBefore(end.add(const Duration(days: 1)))) {
+      DateTime transactionDate = DateTime.parse(
+        transaction.transactionDate.toIso8601String(),
+      );
+      if (transactionDate.isAfter(start) &&
+          transactionDate.isBefore(end.add(const Duration(days: 1)))) {
         if (transaction.status == 'completed') {
           total += transaction.total;
         }
       }
     }
-    
+
     return total;
   }
 
   // Get total number of transactions for a date range
-  Future<int> getTransactionCount({DateTime? startDate, DateTime? endDate}) async {
-    List<Transaction> transactions = await _databaseService.getAllTransactions();
-    
-    DateTime start = startDate ?? DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+  Future<int> getTransactionCount({
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
+    List<Transaction> transactions = await _databaseService
+        .getAllTransactions();
+
+    DateTime start =
+        startDate ??
+        DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
     DateTime end = endDate ?? DateTime.now();
-    
+
     int count = 0;
     for (Transaction transaction in transactions) {
-      DateTime transactionDate = DateTime.parse(transaction.transactionDate.toIso8601String());
-      if (transactionDate.isAfter(start) && transactionDate.isBefore(end.add(const Duration(days: 1)))) {
+      DateTime transactionDate = DateTime.parse(
+        transaction.transactionDate.toIso8601String(),
+      );
+      if (transactionDate.isAfter(start) &&
+          transactionDate.isBefore(end.add(const Duration(days: 1)))) {
         if (transaction.status == 'completed') {
           count++;
         }
       }
     }
-    
+
     return count;
   }
 
   // Get sales by date
-  Future<Map<DateTime, double>> getSalesByDate({DateTime? startDate, DateTime? endDate}) async {
-    List<Transaction> transactions = await _databaseService.getAllTransactions();
-    
-    DateTime start = startDate ?? DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+  Future<Map<DateTime, double>> getSalesByDate({
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
+    List<Transaction> transactions = await _databaseService
+        .getAllTransactions();
+
+    DateTime start =
+        startDate ??
+        DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
     DateTime end = endDate ?? DateTime.now();
-    
+
     Map<DateTime, double> salesByDate = {};
-    
+
     for (Transaction transaction in transactions) {
       DateTime transactionDate = DateTime(
-        transaction.transactionDate.year, 
-        transaction.transactionDate.month, 
-        transaction.transactionDate.day
+        transaction.transactionDate.year,
+        transaction.transactionDate.month,
+        transaction.transactionDate.day,
       );
-      
-      if (transactionDate.isAfter(start.subtract(const Duration(days: 1))) && 
+
+      if (transactionDate.isAfter(start.subtract(const Duration(days: 1))) &&
           transactionDate.isBefore(end.add(const Duration(days: 1)))) {
         if (transaction.status == 'completed') {
           if (salesByDate.containsKey(transactionDate)) {
-            salesByDate[transactionDate] = salesByDate[transactionDate]! + transaction.total;
+            salesByDate[transactionDate] =
+                salesByDate[transactionDate]! + transaction.total;
           } else {
             salesByDate[transactionDate] = transaction.total;
           }
         }
       }
     }
-    
+
     return salesByDate;
   }
 
   // Get top selling products
-  Future<Map<String, int>> getTopSellingProducts({DateTime? startDate, DateTime? endDate}) async {
-    List<Transaction> transactions = await _databaseService.getAllTransactions();
-    
-    DateTime start = startDate ?? DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+  Future<Map<String, int>> getTopSellingProducts({
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
+    List<Transaction> transactions = await _databaseService
+        .getAllTransactions();
+
+    DateTime start =
+        startDate ??
+        DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
     DateTime end = endDate ?? DateTime.now();
-    
+
     Map<String, int> productSales = {};
-    
+
     for (Transaction transaction in transactions) {
       DateTime transactionDate = transaction.transactionDate;
-      
-      if (transactionDate.isAfter(start.subtract(const Duration(days: 1))) && 
+
+      if (transactionDate.isAfter(start.subtract(const Duration(days: 1))) &&
           transactionDate.isBefore(end.add(const Duration(days: 1)))) {
         if (transaction.status == 'completed') {
-          List<TransactionItem> items = await getTransactionItems(transaction.transactionId);
+          List<TransactionItem> items = await getTransactionItems(
+            transaction.transactionId,
+          );
           for (TransactionItem item in items) {
             if (productSales.containsKey(item.productName)) {
-              productSales[item.productName] = productSales[item.productName]! + item.quantity;
+              productSales[item.productName] =
+                  productSales[item.productName]! + item.quantity;
             } else {
               productSales[item.productName] = item.quantity;
             }
@@ -228,7 +273,7 @@ class TransactionService {
         }
       }
     }
-    
+
     return productSales;
   }
 }

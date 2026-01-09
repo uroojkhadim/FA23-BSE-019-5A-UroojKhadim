@@ -7,7 +7,7 @@ class AccountingService {
   // Create accounting entries table
   Future<void> createAccountingTables() async {
     final db = await _databaseService.database;
-    
+
     await db.execute('''
       CREATE TABLE IF NOT EXISTS accounts(
         id TEXT PRIMARY KEY,
@@ -56,7 +56,7 @@ class AccountingService {
   Future<List<Account>> getAllAccounts() async {
     final db = await _databaseService.database;
     final List<Map<String, dynamic>> maps = await db.query('accounts');
-    
+
     return List.generate(maps.length, (i) => Account.fromMap(maps[i]));
   }
 
@@ -66,32 +66,38 @@ class AccountingService {
     return await db.insert('accounting_entries', entry.toMap());
   }
 
-  Future<List<AccountingEntry>> getAccountingEntriesByTransaction(String transactionId) async {
+  Future<List<AccountingEntry>> getAccountingEntriesByTransaction(
+    String transactionId,
+  ) async {
     final db = await _databaseService.database;
     final List<Map<String, dynamic>> maps = await db.query(
       'accounting_entries',
       where: 'transactionId = ?',
       whereArgs: [transactionId],
     );
-    
+
     return List.generate(maps.length, (i) => AccountingEntry.fromMap(maps[i]));
   }
 
-  Future<List<AccountingEntry>> getAccountingEntriesByAccount(String accountId) async {
+  Future<List<AccountingEntry>> getAccountingEntriesByAccount(
+    String accountId,
+  ) async {
     final db = await _databaseService.database;
     final List<Map<String, dynamic>> maps = await db.query(
       'accounting_entries',
       where: 'accountId = ?',
       whereArgs: [accountId],
     );
-    
+
     return List.generate(maps.length, (i) => AccountingEntry.fromMap(maps[i]));
   }
 
   Future<List<AccountingEntry>> getAllAccountingEntries() async {
     final db = await _databaseService.database;
-    final List<Map<String, dynamic>> maps = await db.query('accounting_entries');
-    
+    final List<Map<String, dynamic>> maps = await db.query(
+      'accounting_entries',
+    );
+
     return List.generate(maps.length, (i) => AccountingEntry.fromMap(maps[i]));
   }
 
@@ -102,13 +108,13 @@ class AccountingService {
       where: 'accountId = ?',
       whereArgs: [accountId],
     );
-    
+
     double balance = 0.0;
     for (var map in maps) {
       final entry = AccountingEntry.fromMap(map);
       balance += (entry.credit - entry.debit);
     }
-    
+
     return balance;
   }
 }

@@ -93,12 +93,17 @@ class CustomerProvider with ChangeNotifier {
     if (query.isEmpty) {
       return _customers;
     }
-    
-    return _customers.where((customer) =>
-      customer.name.toLowerCase().contains(query.toLowerCase()) ||
-      (customer.email?.toLowerCase().contains(query.toLowerCase()) ?? false) ||
-      (customer.phone?.toLowerCase().contains(query.toLowerCase()) ?? false)
-    ).toList();
+
+    return _customers
+        .where(
+          (customer) =>
+              customer.name.toLowerCase().contains(query.toLowerCase()) ||
+              (customer.email?.toLowerCase().contains(query.toLowerCase()) ??
+                  false) ||
+              (customer.phone?.toLowerCase().contains(query.toLowerCase()) ??
+                  false),
+        )
+        .toList();
   }
 
   List<Customer> getTopCustomers({int limit = 10}) {

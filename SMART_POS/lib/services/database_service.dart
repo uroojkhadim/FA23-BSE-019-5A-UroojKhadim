@@ -27,7 +27,7 @@ class DatabaseService {
       onUpgrade: _onUpgrade,
     );
   }
-  
+
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
     if (oldVersion < 2) {
       // Add new tables for version 2
@@ -41,7 +41,7 @@ class DatabaseService {
           description TEXT
         )
       ''');
-      
+
       // Create accounting_entries table for accounting
       await db.execute('''
         CREATE TABLE accounting_entries(
@@ -56,7 +56,7 @@ class DatabaseService {
           FOREIGN KEY (accountId) REFERENCES accounts (id)
         )
       ''');
-      
+
       // Create inventory_transactions table for enhanced inventory
       await db.execute('''
         CREATE TABLE inventory_transactions(
@@ -72,7 +72,7 @@ class DatabaseService {
           notes TEXT
         )
       ''');
-      
+
       // Create product_variants table for enhanced inventory
       await db.execute('''
         CREATE TABLE product_variants(
@@ -168,7 +168,7 @@ class DatabaseService {
         FOREIGN KEY (productId) REFERENCES products (id)
       )
     ''');
-    
+
     // Create accounts table for accounting
     await db.execute('''
       CREATE TABLE accounts(
@@ -179,7 +179,7 @@ class DatabaseService {
         description TEXT
       )
     ''');
-    
+
     // Create accounting_entries table for accounting
     await db.execute('''
       CREATE TABLE accounting_entries(
@@ -194,7 +194,7 @@ class DatabaseService {
         FOREIGN KEY (accountId) REFERENCES accounts (id)
       )
     ''');
-    
+
     // Create inventory_transactions table for enhanced inventory
     await db.execute('''
       CREATE TABLE inventory_transactions(
@@ -210,7 +210,7 @@ class DatabaseService {
         notes TEXT
       )
     ''');
-    
+
     // Create product_variants table for enhanced inventory
     await db.execute('''
       CREATE TABLE product_variants(
@@ -229,8 +229,11 @@ class DatabaseService {
   // User operations
   Future<int> insertUser(User user) async {
     final db = await database;
-    return await db.insert('users', user.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace);
+    return await db.insert(
+      'users',
+      user.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
   Future<User?> getUser(int id) async {
@@ -280,18 +283,17 @@ class DatabaseService {
 
   Future<int> deleteUser(int id) async {
     final db = await database;
-    return await db.delete(
-      'users',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    return await db.delete('users', where: 'id = ?', whereArgs: [id]);
   }
 
   // Product operations
   Future<int> insertProduct(Product product) async {
     final db = await database;
-    return await db.insert('products', product.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace);
+    return await db.insert(
+      'products',
+      product.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
   Future<Product?> getProduct(int id) async {
@@ -352,18 +354,17 @@ class DatabaseService {
 
   Future<int> deleteProduct(int id) async {
     final db = await database;
-    return await db.delete(
-      'products',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    return await db.delete('products', where: 'id = ?', whereArgs: [id]);
   }
 
   // Customer operations
   Future<int> insertCustomer(Customer customer) async {
     final db = await database;
-    return await db.insert('customers', customer.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace);
+    return await db.insert(
+      'customers',
+      customer.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
   Future<Customer?> getCustomer(int id) async {
@@ -413,13 +414,9 @@ class DatabaseService {
 
   Future<int> deleteCustomer(int id) async {
     final db = await database;
-    return await db.delete(
-      'customers',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    return await db.delete('customers', where: 'id = ?', whereArgs: [id]);
   }
-  
+
   Future<bool> addToCustomerTotalPurchase(int customerId, double amount) async {
     try {
       final db = await database;
@@ -429,11 +426,12 @@ class DatabaseService {
         where: 'id = ?',
         whereArgs: [customerId],
       );
-      
+
       if (maps.isNotEmpty) {
-        final currentTotal = (maps.first['totalPurchase'] as num?)?.toDouble() ?? 0.0;
+        final currentTotal =
+            (maps.first['totalPurchase'] as num?)?.toDouble() ?? 0.0;
         final newTotal = currentTotal + amount;
-        
+
         // Update customer with new total
         await db.update(
           'customers',
@@ -441,10 +439,10 @@ class DatabaseService {
           where: 'id = ?',
           whereArgs: [customerId],
         );
-        
+
         return true;
       }
-      
+
       return false;
     } catch (e) {
       print('Error adding to customer total purchase: $e');
@@ -455,8 +453,11 @@ class DatabaseService {
   // Transaction operations
   Future<int> insertTransaction(Transaction transaction) async {
     final db = await database;
-    return await db.insert('transactions', transaction.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace);
+    return await db.insert(
+      'transactions',
+      transaction.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
   Future<Transaction?> getTransaction(String transactionId) async {
@@ -480,7 +481,10 @@ class DatabaseService {
     return List.generate(maps.length, (i) => Transaction.fromMap(maps[i]));
   }
 
-  Future<List<Transaction>> getTransactionsByDateRange(DateTime start, DateTime end) async {
+  Future<List<Transaction>> getTransactionsByDateRange(
+    DateTime start,
+    DateTime end,
+  ) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query(
       'transactions',
@@ -516,7 +520,9 @@ class DatabaseService {
     return await db.insert('transaction_items', item.toMap());
   }
 
-  Future<List<TransactionItem>> getTransactionItems(String transactionId) async {
+  Future<List<TransactionItem>> getTransactionItems(
+    String transactionId,
+  ) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query(
       'transaction_items',
