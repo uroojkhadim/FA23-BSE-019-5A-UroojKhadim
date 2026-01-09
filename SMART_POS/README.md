@@ -180,7 +180,18 @@ The application is designed with an offline-first approach:
 
 ## Screenshots
 
-[Include screenshots of the app here]
+<img width="720" height="1450" alt="image" src="https://github.com/user-attachments/assets/60e5c0c4-c221-42d9-84bb-2c4986a53d2c" />
+<img width="494" height="928" alt="image" src="https://github.com/user-attachments/assets/079155a2-7f9d-40e9-a01e-a82589014532" /><img width="494" height="928" alt="image" src="https://github.com/user-attachments/assets/794b66cb-449f-423c-a59c-aee7cedabfb8" /><img width="494" height="928" alt="image" src="https://github.com/user-attachments/assets/e50e12bf-01fc-4017-98a8-e860c556db9d" /><img width="494" height="928" alt="image" src="https://github.com/user-attachments/assets/9a509e70-f42c-4981-be17-6c95089ce440" /><img width="494" height="928" alt="image" src="https://github.com/user-attachments/assets/aaeeeda5-036e-4d42-beda-0c4eca3bc8c4" /><img width="494" height="928" alt="image" src="https://github.com/user-attachments/assets/a8f15eb9-13d6-4f9b-854d-be42b0ef190f" /><img width="494" height="928" alt="image" src="https://github.com/user-attachments/assets/b24dfc5f-e4b0-489f-800b-97898e981234" /><img width="494" height="928" alt="image" src="https://github.com/user-attachments/assets/0061cb1f-f40e-4778-a6b0-19025173f35b" /><img width="494" height="928" alt="image" src="https://github.com/user-attachments/assets/343cf28b-c5bc-48c0-b132-b52149e1a56c" /><img width="494" height="928" alt="image" src="https://github.com/user-attachments/assets/b32a248a-cf2b-4d11-9ceb-b6702fc9dae5" />
+https://github.com/user-attachments/assets/7132ba03-5b55-4579-ac1e-65d8ab2c05c5
+
+
+
+
+
+
+
+
+
 
 ## APK
 
